@@ -13,10 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -43,6 +46,11 @@ public class MainActivity extends ActionBarActivity {
 
     TextView myTextView;
     Button cafeteriaSelector;
+    String[] names;
+    String[] links;
+    HashMap<String, String> namelink = new HashMap<String, String>();
+    String originallink = "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
+
 
 //in your OnCreate() method
 
@@ -57,34 +65,15 @@ public class MainActivity extends ActionBarActivity {
         myTextView.setText("");
 
         cafeteriaSelector = (Button) findViewById(R.id.selector);
+        cafeteriaSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenDialog();
+            }
+        });
+
 
         new RetrieveURL().execute();
-/*
-        String names[] ={"A","B","C","D"};
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.customdialog, null);
-        alertDialog.setView(convertView);
-       // alertDialog.setTitle("List");
-        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        lv.setBackgroundResource(R.drawable.customshape);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.cafeterias,names);
-        lv.setAdapter(adapter);
-*/
-        String names[] ={"A","B","C","D"};
-        Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.customdialog, null);
-        dialog.setContentView(convertView);
-        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        lv.setBackgroundResource(R.drawable.customshape);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.cafeterias,names);
-        lv.setAdapter(adapter);
-
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    //    dialog.show();
 
     }
 
@@ -117,12 +106,45 @@ public class MainActivity extends ActionBarActivity {
         cafeteriaSelector.setAlpha(1);
     }
 
+    private void OpenDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.customdialog, null);
+        dialog.setContentView(convertView);
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+        lv.setBackgroundResource(R.drawable.customshape);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.cafeterias,names);
+        lv.setAdapter(adapter);
+        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                Toast.makeText(MainActivity.this, "this is my Toast message!!! =)",
+                        Toast.LENGTH_LONG).show();
+                System.out.println("Something clicked!");
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
     private void GetCafeterias(Elements elements) {
         cafeteriaSelector.setAlpha(1);
-        cafeteriaSelector.setText(elements.first().text());
-        for(Element element: elements) {
-
+        cafeteriaSelector.setText(elements.select(".active").text());
+        //cafeteriaSelector.setText(elements.first().text());
+        names = new String[elements.size()];
+        links = new String[elements.size()];
+        for(int i = 0; i < elements.size(); ++i) {
+            String buffer = elements.get(i).html();
+            Document doc = Jsoup.parse(buffer);
+            names[i] = doc.text();
+            links[i] = doc.select("a").attr("href");
+            namelink.put(names[i], links[i]);
+            System.out.println(links[i]);
         }
+
     }
 
     private class RetrieveURL extends AsyncTask<String, Void, Void> {
@@ -163,7 +185,7 @@ public class MainActivity extends ActionBarActivity {
 
             Document doc = null;
             try {
-                doc = Jsoup.connect("http://www.hanyang.ac.kr/web/www/-253").get();
+                doc = Jsoup.connect(originallink).get();
 
                 cafeterias = doc.select(".tab-7 > li");
 
