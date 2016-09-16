@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MenuToday</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <color name="blue">#F0FDFE</color>
+</resources>
