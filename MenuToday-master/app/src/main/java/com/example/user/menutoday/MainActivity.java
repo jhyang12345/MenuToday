@@ -3,8 +3,6 @@ package com.example.user.menutoday;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -62,13 +59,10 @@ public class MainActivity extends ActionBarActivity {
     String[] dishes;
     int[] prices;
 
-
-
     HashMap<String, String> namelink = new HashMap<String, String>();
     boolean open = true;
 
-    String originallink;//"http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
-    String cafeterianame;
+    String originallink = "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -92,7 +86,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        originallink  = getCafeteria(this.getApplicationContext());
 
         new RetrieveURL().execute();
 
@@ -131,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void OpenDialog() {
-        final Dialog dialog = new Dialog(this);
+        Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.customdialog, null);
@@ -149,17 +142,10 @@ public class MainActivity extends ActionBarActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(MainActivity.this, namelink.get(parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
-                System.out.println(namelink.get(parent.getItemAtPosition(position).toString()));
-                originallink = namelink.get(parent.getItemAtPosition(position).toString());
-                cafeterianame = parent.getItemAtPosition(position).toString();
-                saveCafeteria(getApplicationContext(), originallink, cafeterianame);
-                dialog.dismiss();
 
-                MainActivity.this.recreate();
-
-                new RetrieveURL().execute();
-
+                Toast.makeText(MainActivity.this, namelink.get(parent.getItemAtPosition(position).toString()),
+                        Toast.LENGTH_LONG).show();
+                System.out.println("Something clicked!");
             }
         });
 
@@ -167,38 +153,10 @@ public class MainActivity extends ActionBarActivity {
         dialog.show();
     }
 
-    private String getCafeteria(Context ctx) {
-        SharedPreferences pref = ctx.getSharedPreferences("meals", MODE_PRIVATE);
-        System.out.println("Link saved" + pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8"));//"http://www.hanyang.ac.kr/web/www/-248");)
-        return pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");//"http://www.hanyang.ac.kr/web/www/-248");
-    }
-
-    private void saveCafeteria(Context ctx, String cafeterialink, String cafeterianame) {
-        SharedPreferences pref = ctx.getSharedPreferences("meals", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        if(cafeterialink.equals("http://www.hanyang.ac.kr/web/www/-248")) {
-            editor.putString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
-        } else if(cafeterialink.equals("http://www.hanyang.ac.kr/web/www/-2-")) {
-            editor.putString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
-        } else {
-            editor.putString("cafeterialink", cafeterialink);
-
-        }
-        editor.putString("cafeterianame", cafeterianame);
-        editor.commit();
-    }
-
-    private String simpleDish(String dishname) {
-        String ret;
-        ret = dishname.substring(0, dishname.indexOf("("));
-        ret = ret.trim();
-        return ret;
-    }
-
     private void loadMeals() {
         ArrayList<Meal> meallist = new ArrayList<Meal>();
         for (int i = 0; i < meals.length; ++i) {
-            if (!meals[i].name.trim().equals("공통찬")) {
+            if (meals[i].name.trim() != "공통찬") {
                 System.out.println('"' + meals[i].name.trim() + '"');
                 meallist.add(meals[i]);
 
@@ -217,8 +175,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                System.out.println("Something clicked here!");
-                System.out.println(view.getMeasuredHeight());
+                Toast.makeText(MainActivity.this, namelink.get(parent.getItemAtPosition(position).toString()),
+                        Toast.LENGTH_LONG).show();
+                System.out.println("Something clicked!");
             }
         });
     }
@@ -237,13 +196,13 @@ public class MainActivity extends ActionBarActivity {
 
                 Elements dishlist = elements.get(i).select("h3");
                 for(Element dishname: dishlist) {
-                    dishes.add(simpleDish(dishname.text()));
+                    dishes.add(dishname.text());
                     System.out.println(dishname.text());
                 }
                 ArrayList<String> prices = new ArrayList<String>();
                 Elements pricelist = elements.get(i).select(".price");
                 for(Element price: pricelist) {
-                    prices.add(price.text() + " 원");
+                    prices.add(price.text());
                     System.out.println(price.text());
                 }
                 meals[i] = new Meal(elements.get(i).select(".d-title2").text(), dishes, prices);

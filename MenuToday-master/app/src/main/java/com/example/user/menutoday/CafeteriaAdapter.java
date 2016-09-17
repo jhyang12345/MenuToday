@@ -21,7 +21,7 @@ public class CafeteriaAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         String name = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.cafeterias, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
             /*convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -31,7 +31,7 @@ public class CafeteriaAdapter extends ArrayAdapter<String> {
             );*/
         }
 
-        TextView cafeteriaName = (TextView) convertView.findViewById(R.id.cafeteriaName);
+        TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
 
         cafeteriaName.setText(name);
         return convertView;

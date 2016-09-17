@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:layout_marginBottom="10dp"
-
-    >
-<!--
-    <ImageView
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-
-        android:id="@+id/bulletstarter"
-        android:src="@drawable/bulletimage"
-        android:layout_alignParentLeft="true"
-
-        />
+    android:paddingRight="20dp">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:background="#00000000"
@@ -24,65 +11,21 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
-
-
         android:id="@+id/mealName"
-        android:textSize="@dimen/abc_text_size_large_material"
+
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-
-        >
-
+        android:minHeight="?android:attr/listPreferredItemHeightSmall" >
 
     </TextView>
- -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:id="@+id/holder">
-        <ImageView
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-
-            android:id="@+id/bulletstarter"
-            android:src="@drawable/bulletimage"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="10dp"
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:id="@+id/mealName"
-            android:text=""
-            />
-    </LinearLayout>
-
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/holder"
-        android:dividerHeight="1px"
-
-        android:background="@drawable/listbackground"
-        android:id="@+id/dishList"
-        android:layout_marginBottom="10dp"
-        >
+        android:layout_below="@+id/mealName"
+        android:id="@+id/dishList">
 
     </ListView>
 
-<!--    <WebView  xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/webview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        />-->
 </RelativeLayout>

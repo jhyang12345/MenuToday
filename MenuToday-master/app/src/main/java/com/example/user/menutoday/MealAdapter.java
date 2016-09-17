@@ -52,10 +52,6 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             );*/
             }
 
-            //setting to unclickable
-            convertView.setEnabled(false);
-            convertView.setOnClickListener(null);
-
             TextView dishName = (TextView) convertView.findViewById(R.id.dishName);
             TextView priceVal = (TextView) convertView.findViewById(R.id.price);
 
@@ -71,7 +67,6 @@ public class MealAdapter extends ArrayAdapter<Meal> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String name = getItem(position).name;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
             /*convertView.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +94,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         dishpriceAdapter adapter = new dishpriceAdapter(this.getContext(), dishlist);
 
-
+        listview.setDivider(null);
         listview.setAdapter(adapter);
 
         ListAdapter listAdapter = listview.getAdapter();
@@ -112,8 +107,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         for (int i = 0; i < numberOfItems; i++) {
             View item = listAdapter.getView(i, null, listview);
             item.measure(0, 0);
-            totalItemsHeight += item.getMeasuredHeight() + item.getPaddingTop() +
-                    item.getPaddingBottom() + item.get;
+            totalItemsHeight += item.getMeasuredHeight();
         }
 
         // Get total height of all item dividers.
