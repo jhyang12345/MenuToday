@@ -22,6 +22,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         super(context, 0, meals);
     }
 
+    static int totalheight = 0;
     class dishprice {
         String dishname;
         String price;
@@ -43,6 +44,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             String price = getItem(position).price;
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
+
             /*convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -61,6 +63,9 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
             dishName.setText(dishname);
             priceVal.setText(price);
+
+            totalheight += convertView.getMeasuredHeight();
+            System.out.println("Updating total height: " + totalheight);
 
             ListView dishlist = (ListView) convertView.findViewById(R.id.dishList);
 
@@ -111,9 +116,11 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         for (int i = 0; i < numberOfItems; i++) {
             View item = listAdapter.getView(i, null, listview);
-            item.measure(0, 0);
-            totalItemsHeight += item.getMeasuredHeight() + item.getPaddingTop() +
-                    item.getPaddingBottom() + item.get;
+            item.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+            totalItemsHeight += item.getMeasuredHeight() + item.getHeight() + item.getPaddingTop() +
+                    item.getPaddingBottom();
         }
 
         // Get total height of all item dividers.
@@ -122,12 +129,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         // Set list height.
         ViewGroup.LayoutParams params = listview.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;
-        listview.setLayoutParams(params);
-
-        listview.requestLayout();
-
-        params.height = totalItemsHeight;
+        params.height = totalItemsHeight + totalDividersHeight;//totalItemsHeight + totalDividersHeight;
 
         listview.setLayoutParams(params);
         listview.requestLayout();
