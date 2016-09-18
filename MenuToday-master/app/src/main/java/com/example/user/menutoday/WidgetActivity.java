@@ -68,6 +68,9 @@ public class WidgetActivity extends AppWidgetProvider {
 
     static HashMap<String, String> namelink = new HashMap<String, String>();
 
+    static boolean loadMeal = false;
+    static int clickedIndex = 0;
+
     String originallink = "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
 
     @Override
@@ -97,7 +100,10 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextViewText(R.id.currentTime, String.format("%02d", Integer.parseInt(String.valueOf(month))) + "/" + String.format("%02d", Integer.parseInt(String.valueOf(day))) +
                     " " + String.format("%02d", Integer.parseInt(String.valueOf(hours))) + ":" + String.format("%02d", Integer.parseInt(String.valueOf(minutes))));
 
-            views.setTextViewText(R.id.widgetcafeteria, pref.getString("cafeterianame", "학생식당"));
+            if(!loadMeal) {
+                views.setTextViewText(R.id.widgetcafeteria, pref.getString("cafeterianame", "학생식당"));
+            }
+
 
             //setting up an intent and assigning it to cafeteriaClick
             Intent clickintent = new Intent(context, getClass());
@@ -141,8 +147,9 @@ public class WidgetActivity extends AppWidgetProvider {
             AppWidgetManager manager = AppWidgetManager.getInstance(context);
             manager.updateAppWidget(thisWidget, views);
 
-
-            originallink = pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
+            if(!loadMeal) {
+                originallink = pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
+            }
 
             System.out.println("Original link from namelink retrieval: " + originallink);
 
@@ -193,18 +200,6 @@ public class WidgetActivity extends AppWidgetProvider {
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
             int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
 
-            //new RetrieveURL(views, context, manager).execute();
-
-                /*
-
-                for(int i = 0; i <5; ++i) {
-                    RemoteViews headerText = new RemoteViews(context.getPackageName(), R.layout.widgetheader);
-
-                    views.addView(R.id.headermeal, headerText);
-                    //System.out.println("Meals found from widget " + meals[i].name);
-                    AppWidgetManager.getInstance(context).updateAppWidget(
-                            new ComponentName(context, WidgetActivity.class),views);
-                }*/
             onUpdate(context, manager, appWidgetIds);
 
 
@@ -221,6 +216,25 @@ public class WidgetActivity extends AppWidgetProvider {
 
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.Black));
 
+            clickedIndex = 0;
+            loadMeal = true;
+            System.out.println("Set loadMeal as: " + loadMeal);
+            System.out.println("Set clickedIndex as: " + clickedIndex);
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
+            int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
+
+            onUpdate(context, manager, appWidgetIds);
+
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
         } else if(intent.getAction().equals(HEADER_CLICK2)) {
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.White));
             views.setTextColor(R.id.headermeal2, context.getResources().getColor(R.color.White));
@@ -229,6 +243,25 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal5, context.getResources().getColor(R.color.White));
 
             views.setTextColor(R.id.headermeal2, context.getResources().getColor(R.color.Black));
+
+            clickedIndex = 1;
+            loadMeal = true;
+            System.out.println("Set loadMeal as: " + loadMeal);
+            System.out.println("Set clickedIndex as: " + clickedIndex);
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
+            int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
+
+            onUpdate(context, manager, appWidgetIds);
+
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
 
         } else if(intent.getAction().equals(HEADER_CLICK3)) {
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.White));
@@ -239,6 +272,25 @@ public class WidgetActivity extends AppWidgetProvider {
 
             views.setTextColor(R.id.headermeal3, context.getResources().getColor(R.color.Black));
 
+            clickedIndex = 2;
+            loadMeal = true;
+            System.out.println("Set loadMeal as: " + loadMeal);
+            System.out.println("Set clickedIndex as: " + clickedIndex);
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
+            int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
+
+            onUpdate(context, manager, appWidgetIds);
+
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
         } else if(intent.getAction().equals(HEADER_CLICK4)) {
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.White));
             views.setTextColor(R.id.headermeal2, context.getResources().getColor(R.color.White));
@@ -248,6 +300,25 @@ public class WidgetActivity extends AppWidgetProvider {
 
             views.setTextColor(R.id.headermeal4, context.getResources().getColor(R.color.Black));
 
+            clickedIndex = 3;
+            loadMeal = true;
+            System.out.println("Set loadMeal as: " + loadMeal);
+            System.out.println("Set clickedIndex as: " + clickedIndex);
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
+            int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
+
+            onUpdate(context, manager, appWidgetIds);
+
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
         } else if(intent.getAction().equals(HEADER_CLICK5)) {
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.White));
             views.setTextColor(R.id.headermeal2, context.getResources().getColor(R.color.White));
@@ -256,6 +327,25 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal5, context.getResources().getColor(R.color.White));
 
             views.setTextColor(R.id.headermeal5, context.getResources().getColor(R.color.Black));
+
+            clickedIndex = 4;
+            loadMeal = true;
+            System.out.println("Set loadMeal as: " + loadMeal);
+            System.out.println("Set clickedIndex as: " + clickedIndex);
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
+            int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
+
+            onUpdate(context, manager, appWidgetIds);
+
+
+            AppWidgetManager.getInstance(context).updateAppWidget(
+                    new ComponentName(context, WidgetActivity.class),views);
 
         }
         AppWidgetManager.getInstance(context).updateAppWidget(
@@ -339,6 +429,13 @@ public class WidgetActivity extends AppWidgetProvider {
         editor.commit();
     }
 
+    private void saveMealOfDay(Context ctx, String mealname) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("mealname", mealname);
+        editor.commit();
+
+    }
+
     private class RetrieveURL extends AsyncTask<String, Void, RemoteViews> {
 
         private Exception exception;
@@ -398,6 +495,8 @@ public class WidgetActivity extends AppWidgetProvider {
 
             }
 
+            System.out.println("LoadMeal in PostExecute: " + loadMeal);
+
             System.out.println("Current menu status: " + menus.html());
             Meal[] meals = GetMenus(menus);
 
@@ -420,31 +519,53 @@ public class WidgetActivity extends AppWidgetProvider {
             mealresource.put(textView4, R.id.headermeal4);
             mealresource.put(textView5, R.id.headermeal5);
 
+            ArrayList<RemoteViews> menuholder = new ArrayList<RemoteViews>();
+            RemoteViews menuTextView1 = new RemoteViews(context.getPackageName(), R.id.menu1);
+            RemoteViews menuTextView2 = new RemoteViews(context.getPackageName(), R.id.menu2);
+            RemoteViews menuTextView3 = new RemoteViews(context.getPackageName(), R.id.menu3);
+            menuholder.add(menuTextView1);
+            menuholder.add(menuTextView2);
+            menuholder.add(menuTextView3);
+
+            HashMap<RemoteViews, Integer> menuresource = new HashMap<RemoteViews, Integer>();
+            menuresource.put(menuTextView1, R.id.menu1);
+            menuresource.put(menuTextView2, R.id.menu2);
+            menuresource.put(menuTextView3, R.id.menu3);
+
+            this.views.setViewVisibility(menuresource.get(menuTextView1), View.GONE);
+            this.views.setViewVisibility(menuresource.get(menuTextView2), View.GONE);
+            this.views.setViewVisibility(menuresource.get(menuTextView3), View.GONE);
+
+
             for(int i = 0; i < mealholder.size(); ++i) {
                 this.views.setViewVisibility(mealresource.get(mealholder.get(i)), View.GONE);
             }
             //this.views.removeAllViews(R.id.header);
 
+            if(!loadMeal) {
+                int curindex = cafeterialist.indexOf(pref.getString("cafeterianame", cafeterialist.get(0)));
+                System.out.println("Current index is: " + curindex + ", " + pref.getString("cafeterianame", cafeterialist.get(0)));
 
-            int curindex = cafeterialist.indexOf(pref.getString("cafeterianame", cafeterialist.get(0)));
-            System.out.println("Current index is: " + curindex + ", " + pref.getString("cafeterianame", cafeterialist.get(0)));
-
-            if(curindex < cafeterialist.size() - 1) {
-                System.out.println("Setting value to " + cafeterialist.get(curindex + 1));
-                this.views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(curindex));
-                saveCafeteria(context, links[curindex + 1], names[curindex + 1]);
-                System.out.println(cafeterialist.get(curindex + 1));
-                System.out.println("New link: " + namelink.get(names[curindex + 1]));
-                originallink = namelink.get(names[curindex + 1]);
-            } else {
-                this.views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(cafeterialist.size() - 1));
-                saveCafeteria(context, links[0], names[0]);
-                System.out.println(cafeterialist.get(0));
-                System.out.println("New link: " + namelink.get(names[0]));
-                originallink = namelink.get(names[0]);
+                if(curindex < cafeterialist.size() - 1) {
+                    System.out.println("Setting value to " + cafeterialist.get(curindex + 1));
+                    this.views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(curindex));
+                    saveCafeteria(context, links[curindex + 1], names[curindex + 1]);
+                    System.out.println(cafeterialist.get(curindex + 1));
+                    System.out.println("New link: " + namelink.get(names[curindex + 1]));
+                    originallink = namelink.get(names[curindex + 1]);
+                } else {
+                    this.views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(cafeterialist.size() - 1));
+                    saveCafeteria(context, links[0], names[0]);
+                    System.out.println(cafeterialist.get(0));
+                    System.out.println("New link: " + namelink.get(names[0]));
+                    originallink = namelink.get(names[0]);
+                }
             }
 
+
             ArrayList<Integer> indexlist = new ArrayList<Integer>();
+
+            System.out.println("Meals found!: " + meals.length);
 
             for(int i = 0; i < meals.length; ++i) {
                 if(meals[i].name.equals("공통찬")) continue;
@@ -457,8 +578,28 @@ public class WidgetActivity extends AppWidgetProvider {
                 RemoteViews textView = mealholder.get(i);//new RemoteViews(context.getPackageName(), R.layout.widgetheader);
                 if(meals[i].name.equals("공통찬")) continue;
 
+
+
                 this.views.setTextViewText(mealresource.get(textView), meals[i].name);
                 this.views.setViewVisibility(mealresource.get(textView), View.VISIBLE);
+
+                System.out.println("Clicked Index here: " + clickedIndex);
+
+                if((!loadMeal && index == 0) || (loadMeal && index == clickedIndex)) {
+                    this.views.setTextColor(mealresource.get(textView), context.getResources().getColor(R.color.Black));
+                    for(int j = 0; j < meals[i].dishes.size() && j < 3; ++j) {
+                        System.out.println(meals[i].dishes.get(j));
+                        RemoteViews menuTextView = menuholder.get(j);
+                        this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
+                        this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+                    }
+                    for(int j = meals[i].dishes.size(); j < 3 && j < menuholder.size(); ++j) {
+                        RemoteViews menuTextView = menuholder.get(j);
+                        this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
+                    }
+
+
+                }
 
   /*
                 clickintent.setAction(HEADER_CLICK);
@@ -510,9 +651,62 @@ public class WidgetActivity extends AppWidgetProvider {
             AppWidgetManager.getInstance(context).updateAppWidget(
                     new ComponentName(context, WidgetActivity.class), this.views);
 
-
+            loadMeal = false;
             //UpdateText(retvalue);
         }
     }
+
+    private class RetrieveMenu extends AsyncTask<String, Void, Void> {
+
+        private RemoteViews views;
+        private Context context;
+        private AppWidgetManager WidgetManager;
+        private int currentWidgetId;
+        private int clickedIndex;
+
+        public RetrieveMenu(RemoteViews views, Context context, AppWidgetManager appWidgetManager, int currentWidgetId, int clickedIndex) {
+            this.views = views;
+            this.context = context;
+            this.WidgetManager = appWidgetManager;
+            this.currentWidgetId = currentWidgetId;
+            this.clickedIndex = clickedIndex;
+        }
+
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Document doc = null;
+            try {
+                if(originallink.equals("http://www.hanyang.ac.kr/web/www/-2-")) {
+                    originallink = "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
+                } else if (originallink.equals("http://www.hanyang.ac.kr/web/www/-248")) {
+                    originallink = "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
+                }
+
+                System.out.println("Original link before retrieval: " + originallink);
+
+                doc = Jsoup.connect(originallink).get();
+
+                cafeterias = doc.select(".tab-7 > li");
+
+                menus = doc.select(".in-box");
+
+                System.out.println("Current menu status at retrieve: " + menus.html());
+
+                retvalue = cafeterias.html();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void something) {
+
+        }
+    }
+
 
 }
