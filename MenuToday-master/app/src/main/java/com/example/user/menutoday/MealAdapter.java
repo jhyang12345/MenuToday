@@ -99,6 +99,9 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         cafeteriaName.setText(name);
 
+        convertView.setEnabled(false);
+        convertView.setOnClickListener(null);
+
         //ListView listview = (ListView) convertView.findViewById(R.id.dishList);
         LinearLayout listview = (LinearLayout) convertView.findViewById(R.id.dishList);
 
@@ -124,6 +127,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             int pB = newitem.getPaddingBottom();
 
 
+
+
             if(i == getItem(position).dishes.size() - 1) {
                 newitem.setBackground(listview.getResources().getDrawable(R.drawable.noborder));
                 newitem.setPadding(pL, pT, pR, pB);
@@ -131,6 +136,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
                 newitem.setBackground(listview.getResources().getDrawable(R.drawable.borderbottom));
                 newitem.setPadding(pL, pT, pR, pB);
             }
+
+
 
             dishname.setText(getItem(position).dishes.get(i));
             dishprice.setText(getItem(position).prices.get(i));

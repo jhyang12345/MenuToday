@@ -3,11 +3,15 @@
     android:layout_height="wrap_content"
     android:layout_width="0dip"
     android:textSize="16dp"
-    android:textColor="#000"
-
+    android:textColor="#FFF"
     android:layout_weight="1"
-    android:text="아무거나"
+    android:text=""
     android:background="@drawable/mealtimebackground"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:id="@+id/headermeal"
     android:gravity="center_horizontal"
+
     />
+
+<!-- android:background="@drawable/mealtimebackground" -->
