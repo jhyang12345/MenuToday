@@ -29,6 +29,7 @@
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"></action>
+                <action android:name="android.appwidget.action.ACTION_WIDGET_CLICK"></action>
             </intent-filter>
             <intent-filter>
                 <action android:name="ACTION_AUTO_UPDATE_WIDGET" />

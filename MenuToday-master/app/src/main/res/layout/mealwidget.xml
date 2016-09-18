@@ -43,34 +43,35 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:background="@drawable/widgetheader"
+        android:layout_alignParentStart="true"
+        android:id="@+id/header">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"
         android:layout_alignParentStart="true">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:textSize="16dp"
+            android:textColor="#000"
+            android:text="아무거나"
+
+            android:gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="0dip"
             android:layout_weight="1"
             android:textSize="16dp"
-            android:textColor="#fff"
-            android:text="아무거나"
-            android:background="@drawable/mealtimebackground"
-            android:gravity="center_horizontal"
-            />
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="16dp"
-            android:textColor="#fff"
-            android:text="아무거나"
-            android:background="@drawable/mealtimebackground"
-            android:gravity="center_horizontal"
-            />
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="16dp"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:text="아무거나"
 
             android:gravity="center_horizontal"

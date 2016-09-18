@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -42,6 +44,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         public View getView(int position, View convertView, ViewGroup parent) {
             String dishname = getItem(position).dishname;
             String price = getItem(position).price;
+
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
 
@@ -54,6 +57,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             );*/
             }
 
+            MainActivity.hasAdded.put(dishname, true);
+
             //setting to unclickable
             convertView.setEnabled(false);
             convertView.setOnClickListener(null);
@@ -64,10 +69,12 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             dishName.setText(dishname);
             priceVal.setText(price);
 
+
             totalheight += convertView.getMeasuredHeight();
             System.out.println("Updating total height: " + totalheight);
 
-            ListView dishlist = (ListView) convertView.findViewById(R.id.dishList);
+
+//            ListView dishlist = (ListView) convertView.findViewById(R.id.dishList);
 
             return convertView;
         }
@@ -92,37 +99,71 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         cafeteriaName.setText(name);
 
-        ListView listview = (ListView) convertView.findViewById(R.id.dishList);
+        //ListView listview = (ListView) convertView.findViewById(R.id.dishList);
+        LinearLayout listview = (LinearLayout) convertView.findViewById(R.id.dishList);
+
+        //listview.setId(position);
 
         ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
 
-        for(int i = 0; i < getItem(position).dishes.size(); ++i) {
-            dishlist.add(new dishprice(getItem(position).dishes.get(i), getItem(position).prices.get(i)));
-
-
+        int childCount = ((ViewGroup)listview).getChildCount();
+        if(childCount != 0) {
+            return convertView;
         }
 
-        dishpriceAdapter adapter = new dishpriceAdapter(this.getContext(), dishlist);
+        for(int i = 0; i < getItem(position).dishes.size(); ++i) {
+
+            dishlist.add(new dishprice(getItem(position).dishes.get(i), getItem(position).prices.get(i)));
+            LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
+            TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
+            TextView dishprice = (TextView) newitem.findViewById(R.id.price);
+
+            int pL = newitem.getPaddingLeft();
+            int pT = newitem.getPaddingTop();
+            int pR = newitem.getPaddingRight();
+            int pB = newitem.getPaddingBottom();
 
 
-        listview.setAdapter(adapter);
+            if(i == getItem(position).dishes.size() - 1) {
+                newitem.setBackground(listview.getResources().getDrawable(R.drawable.noborder));
+                newitem.setPadding(pL, pT, pR, pB);
+            } else {
+                newitem.setBackground(listview.getResources().getDrawable(R.drawable.borderbottom));
+                newitem.setPadding(pL, pT, pR, pB);
+            }
 
-        ListAdapter listAdapter = listview.getAdapter();
+            dishname.setText(getItem(position).dishes.get(i));
+            dishprice.setText(getItem(position).prices.get(i));
+            listview.addView(newitem);
+
+        }
+/*
+    //    dishpriceAdapter adapter = new dishpriceAdapter(this.getContext(), dishlist);
+
+
+//        listview.setAdapter(adapter);
+
+//        ListAdapter listAdapter = listview.getAdapter();
 
         int totalItemsHeight = 0;
-        int numberOfItems = listAdapter.getCount();
+        int numberOfItems = adapter.getCount();//listAdapter.getCount();
 
         // Get total height of all items.
 
         for (int i = 0; i < numberOfItems; i++) {
-            View item = listAdapter.getView(i, null, listview);
-            item.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            View item = adapter.getView(i, null, listview);
 
-            totalItemsHeight += item.getMeasuredHeight() + item.getHeight() + item.getPaddingTop() +
-                    item.getPaddingBottom();
-        }
+            listview.addView(item);
 
+            item.measure(View.MeasureSpec.AT_MOST,
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.AT_MOST));
+
+            totalItemsHeight += item.getMeasuredHeight();// + //item.getHeight() + item.getPaddingTop() +
+                    //item.getMeasuredHeightAndState();
+
+
+        }*/
+/*
         // Get total height of all item dividers.
         int totalDividersHeight = listview.getDividerHeight() *
                 (numberOfItems - 1);
@@ -133,7 +174,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         listview.setLayoutParams(params);
         listview.requestLayout();
-
+*/
         return convertView;
     }
 

@@ -62,7 +62,8 @@ public class MainActivity extends ActionBarActivity {
     String[] dishes;
     int[] prices;
 
-
+    static boolean Rendered = false;
+    static HashMap<String, Boolean> hasAdded;
 
     HashMap<String, String> namelink = new HashMap<String, String>();
     boolean open = true;
@@ -91,6 +92,8 @@ public class MainActivity extends ActionBarActivity {
                 OpenDialog();
             }
         });
+
+        hasAdded = new HashMap<String, Boolean>();
 
         originallink  = getCafeteria(this.getApplicationContext());
 
@@ -238,6 +241,9 @@ public class MainActivity extends ActionBarActivity {
                 Elements dishlist = elements.get(i).select("h3");
                 for(Element dishname: dishlist) {
                     dishes.add(simpleDish(dishname.text()));
+
+                    //populating HashMap
+                    hasAdded.put(dishname.text(), false);
                     System.out.println(dishname.text());
                 }
                 ArrayList<String> prices = new ArrayList<String>();
