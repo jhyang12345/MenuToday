@@ -172,30 +172,73 @@ public class MainActivity extends ActionBarActivity {
 
     private String getCafeteria(Context ctx) {
         SharedPreferences pref = ctx.getSharedPreferences("meals", MODE_PRIVATE);
-        System.out.println("Link saved" + pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8"));//"http://www.hanyang.ac.kr/web/www/-248");)
-        return pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");//"http://www.hanyang.ac.kr/web/www/-248");
+        System.out.println("Link saved" + pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248"));
+        return pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248");
     }
 
     private void saveCafeteria(Context ctx, String cafeterialink, String cafeterianame) {
         SharedPreferences pref = ctx.getSharedPreferences("meals", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        if(cafeterialink.equals("http://www.hanyang.ac.kr/web/www/-248")) {
-            editor.putString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
-        } else if(cafeterialink.equals("http://www.hanyang.ac.kr/web/www/-2-")) {
-            editor.putString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8");
-        } else {
-            editor.putString("cafeterialink", cafeterialink);
 
-        }
+        editor.putString("cafeterialink", cafeterialink);
+
+
         editor.putString("cafeterianame", cafeterianame);
         editor.commit();
     }
 
     private String simpleDish(String dishname) {
         String ret;
-        ret = dishname.substring(0, dishname.indexOf("("));
-        ret = ret.trim();
-        return ret;
+        System.out.println("Dishname at simpleDish: " + dishname);
+        if(dishname.length() == 0) {
+            return "";
+        }
+        if(dishname.indexOf("(") == 0 && dishname.indexOf(")") >= dishname.indexOf("(")) {
+            ret = dishname.substring(dishname.indexOf("("), dishname.indexOf(")") + 1);
+            if(ret.matches(".*[a-zA-Z]+.*")) {
+                ret = ret.trim();
+                ret = dishname.substring(dishname.indexOf(")") + 1);
+
+                return simpleDish(ret);
+            }
+
+        } else if(dishname.indexOf("(") > 0 && dishname.indexOf(")") > dishname.indexOf("(")) {
+            ret = dishname.substring(dishname.indexOf("("), dishname.indexOf(")") + 1);
+            if(ret.matches(".*[a-zA-Z]+.*")) {
+                ret = ret.trim();
+                ret = dishname.substring(dishname.indexOf(")") + 1);
+
+                return simpleDish(ret);
+            }
+        }
+        return dishname;
+    }
+
+    private String stripWon(String price) {
+        String ret;
+        System.out.println("Price at stripWon: " + price);
+
+        String testval = price;
+        int index = testval.indexOf("원");
+        int count = 0;
+        while(index != -1) {
+            count++;
+            testval = testval.substring(index + 1);
+            index = testval.indexOf("원");
+        }
+
+        if(count > 2) {
+            return price;
+        }
+
+        if(price.length() == 0) {
+            return "-";
+        } else if(price.contains("원")) {
+            ret = price.substring(0, price.indexOf("원"));
+            ret = ret.trim();
+            return ret;
+        }
+        return price;
     }
 
     private void loadMeals() {
@@ -249,8 +292,8 @@ public class MainActivity extends ActionBarActivity {
                 ArrayList<String> prices = new ArrayList<String>();
                 Elements pricelist = elements.get(i).select(".price");
                 for(Element price: pricelist) {
-                    prices.add(price.text() + " 원");
-                    System.out.println(price.text());
+                    prices.add(stripWon(price.text()) + " 원");
+                    System.out.println(stripWon(price.text()));
                 }
                 meals[i] = new Meal(elements.get(i).select(".d-title2").text(), dishes, prices);
 
