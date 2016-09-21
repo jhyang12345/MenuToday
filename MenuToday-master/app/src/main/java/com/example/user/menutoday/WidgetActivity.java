@@ -19,6 +19,8 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,7 +35,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by user on 2016-09-17.
@@ -57,6 +61,8 @@ public class WidgetActivity extends AppWidgetProvider {
     static String[] dishes;
     static int[] prices;
 
+    static CafeteriaItem[] jsonlist;
+
     public static final String ACTION_UPDATE_CLICK = "android.appwidget.action.ACTION_WIDGET_CLICK";
     public static final String HEADER_CLICK = "android.appwidget.action.HEADER_CLICK";
 
@@ -71,6 +77,8 @@ public class WidgetActivity extends AppWidgetProvider {
     static boolean loadMeal = false;
     static int clickedIndex = 0;
     static boolean updateRestaurant = false;
+
+    static String[] weekdays = {"", "월", "화", "수", "목", "금", "토", "일"};
 
     static String[] restaurants = {"학생식당", "교직원식당", "사랑방", "신교직원식당", "신학생식당", "제2생활관식당", "행원파크"};
 
@@ -99,9 +107,10 @@ public class WidgetActivity extends AppWidgetProvider {
             int hours = c.get(Calendar.HOUR_OF_DAY);
             int month = c.get(Calendar.MONTH) + 1;
             int day = c.get(Calendar.DAY_OF_MONTH);
+            int weekday = c.get(Calendar.DAY_OF_WEEK);
 
-            views.setTextViewText(R.id.currentTime, String.format("%02d", Integer.parseInt(String.valueOf(month))) + "/" + String.format("%02d", Integer.parseInt(String.valueOf(day))) +
-                    " " + String.format("%02d", Integer.parseInt(String.valueOf(hours))) + ":" + String.format("%02d", Integer.parseInt(String.valueOf(minutes))));
+            views.setTextViewText(R.id.currentTime, Integer.parseInt(String.valueOf(month)) + "월 " + Integer.parseInt(String.valueOf(day)) +
+                    "일 " + weekdays[weekday] + "요일");
 
             if(!updateRestaurant) {
                 views.setTextViewText(R.id.widgetcafeteria, pref.getString("cafeterianame", "학생식당"));
@@ -157,30 +166,6 @@ public class WidgetActivity extends AppWidgetProvider {
             originallink = pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-2-");
 
             System.out.println("Original link from namelink retrieval: " + originallink);
-
-            if(updateRestaurant) {
-                int curindex = cafeterialist.indexOf(pref.getString("cafeterianame", cafeterialist.get(0)));
-                System.out.println("Current index is: " + curindex + ", " + pref.getString("cafeterianame", cafeterialist.get(0)));
-
-                if(curindex < cafeterialist.size() - 1) {
-                    System.out.println("Setting value to " + cafeterialist.get(curindex + 1));
-                    views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(curindex + 1));
-                    saveCafeteria(context, links[curindex + 1], names[curindex + 1]);
-                    System.out.println(cafeterialist.get(curindex + 1));
-                    System.out.println("New link: " + namelink.get(names[curindex + 1]));
-                    originallink = namelink.get(names[curindex + 1]);
-                } else {
-                    views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(0));
-                    saveCafeteria(context, links[0], names[0]);
-                    System.out.println(cafeterialist.get(0));
-                    System.out.println("New link: " + namelink.get(names[0]));
-                    originallink = namelink.get(names[0]);
-                }
-
-                manager.updateAppWidget(thisWidget, views);
-
-                updateRestaurant = false;
-            }
 
             new RetrieveURL(views, context, manager, currentWidgetId).execute();
 /*
@@ -376,6 +361,34 @@ public class WidgetActivity extends AppWidgetProvider {
                 new ComponentName(context, WidgetActivity.class),views);
     }
 
+    private void loadFromJson() {
+        String wholewebsite = pref.getString("allitems", "{}");
+        System.out.println(wholewebsite);
+        Gson gson = new Gson();
+        jsonlist = gson.fromJson(wholewebsite, CafeteriaItem[].class);
+
+        names = new String[jsonlist.length];
+
+        //reinitializing to empty arraylist
+        cafeterialist = new ArrayList<String>();
+
+        for(int i = 0; i < jsonlist.length; ++i) {
+            System.out.println("From JSON OBJECT: " +  jsonlist[i].cafeterianame);
+            for(int j = 0; j < jsonlist[i].meals.size(); ++j) {
+                System.out.println(jsonlist[i].meals.get(j).name);
+            }
+            cafeterialist.add(jsonlist[i].cafeterianame);
+            names[i] = jsonlist[i].cafeterianame;
+        }
+        //pref = this.getContext().getSharedPreferences("meals", MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong("TIME", new Date().getTime());
+        editor.commit();
+        String currentname = pref.getString("cafeterianame", "학생식당");
+
+    }
+
     private void GetCafeterias(Elements elements) {
         System.out.println("Get Cafeteria Called!");
         cafeterialist = new ArrayList<String>();
@@ -395,6 +408,38 @@ public class WidgetActivity extends AppWidgetProvider {
 
     }
 
+    public String removeheader(String text) {
+        String ret = text.trim();
+        if(ret.charAt(0) == '[') {
+            int last = 0;
+            for(int i = 0; i < ret.length(); ++i) {
+                if(ret.charAt(i) == ']') {
+                    last = i;
+                    return removeheader(ret.substring(i + 1));
+                }
+            }
+            return ret.substring(last + 1);
+
+        }
+        return ret;
+    }
+
+    public String commaspacing(String text) {
+        if(!text.contains(",")) {
+            return text.trim();
+        } else {
+            int index = 0;
+            text = text.trim();
+            while(index < text.length()) {
+                if (text.charAt(index) ==',' && index + 1 < text.length() && text.charAt(index + 1) != ' ') {
+                    text = text.substring(0, index + 1) + ' ' + text.substring(index + 1);
+                }
+                index++;
+            }
+        }
+        return text.trim();
+    }
+
     private String simpleDish(String dishname) {
         String ret;
         System.out.println("Dishname at simpleDish: " + dishname);
@@ -407,7 +452,7 @@ public class WidgetActivity extends AppWidgetProvider {
                 ret = ret.trim();
                 ret = dishname.substring(dishname.indexOf(")") + 1);
 
-                return simpleDish(ret);
+                return simpleDish(commaspacing(removeheader(ret)));
             }
 
         } else if(dishname.indexOf("(") > 0 && dishname.indexOf(")") > dishname.indexOf("(")) {
@@ -416,10 +461,10 @@ public class WidgetActivity extends AppWidgetProvider {
                 ret = ret.trim();
                 ret = dishname.substring(dishname.indexOf(")") + 1);
 
-                return simpleDish(ret);
+                return simpleDish(commaspacing(removeheader(ret)));
             }
         }
-        return dishname;
+        return commaspacing(removeheader(dishname));
     }
 
     private String stripWon(String price) {
@@ -484,11 +529,11 @@ public class WidgetActivity extends AppWidgetProvider {
 
     }
 
-    private void saveCafeteria(Context ctx, String cafeterialink, String cafeterianame) {
+
+
+    private void saveCafeteria(Context ctx,  String cafeterianame) {
         pref = ctx.getSharedPreferences("meals", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
-        editor.putString("cafeterialink", cafeterialink);
 
         editor.putString("cafeterianame", cafeterianame);
         editor.commit();
@@ -503,7 +548,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
     }
 
-    private class RetrieveURL extends AsyncTask<String, Void, RemoteViews> {
+    private class RetrieveURL extends AsyncTask<String, Void, Void> {
 
         private Exception exception;
 
@@ -520,47 +565,149 @@ public class WidgetActivity extends AppWidgetProvider {
         }
 
         @Override
-        protected RemoteViews doInBackground(String... urls) {
+        protected Void doInBackground(String... urls) {
             Document doc = null;
-            try {
 
-                System.out.println("Original link before retrieval: " + originallink);
+            long mils = pref.getLong("TIME", 0);
+            Date today = new Date();
+            long curtime = today.getTime();
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
+            System.out.println("Saved time: " + mils + " " + curtime);
+            System.out.println("Minutes: " + minutes);
+            if(minutes > 240) {
 
-                doc = Jsoup.connect(originallink).get();
+                try {
 
-                cafeterias = doc.select(".tab-7 > li");
+                    System.out.println("Original link before retrieval: " + originallink);
 
-                menus = doc.select(".in-box");
+                    doc = Jsoup.connect(originallink).get();
 
-                //System.out.println("Current menu status at retrieve: " + menus.html());
+                    cafeterias = doc.select(".tab-7 > li");
 
-                retvalue = cafeterias.html();
+                    menus = doc.select(".in-box");
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    //System.out.println("Current menu status at retrieve: " + menus.html());
+
+                    retvalue = cafeterias.html();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                names = new String[cafeterias.size()];
+                links = new String[cafeterias.size()];
+
+                for (int i = 0; i < cafeterias.size(); ++i) {
+                    String buffer = cafeterias.get(i).html();
+                    Document bufferdoc = Jsoup.parse(buffer);
+                    names[i] = bufferdoc.text();
+                    links[i] = bufferdoc.select("a").attr("href");
+                    namelink.put(names[i], links[i]);
+                }
+
+                ArrayList<CafeteriaItem> cafeterialist = new ArrayList<CafeteriaItem>();
+
+                try {
+                    for (int i = 0; i < links.length; ++i) {
+                        String cafeterianame = names[i];
+                        doc = Jsoup.connect(links[i]).get();
+
+                        menus = doc.select(".in-box");
+                        meals = GetMenus(menus);
+
+                        ArrayList<Meal> CafeteriaMeals = new ArrayList<Meal>();
+                        for (int x = 0; x < meals.length; ++x) {
+                            CafeteriaMeals.add(meals[x]);
+
+                            /*ArrayList<String> dishlist = new ArrayList<String>();
+                            ArrayList<String> pricelist = new ArrayList<String>();
+                            for(int y = 0; y < meals[x].dishes.size(); ++y) {
+                                dishlist.add(meals[x].dishes.get(y));
+                                pricelist.add(meals[x].prices.get(y));
+
+                            }*/
+
+                        }
+                        cafeterialist.add(new CafeteriaItem(cafeterianame, CafeteriaMeals));
+
+                    }
+
+                    Gson gson = new Gson();
+
+                    String prettyJson = gson.toJson(cafeterialist);
+
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("allitems", prettyJson);
+                    editor.commit();
+
+                } catch (IOException e) {
+
+                }
+        }
 
             return null;
 
         }
 
         @Override
-        protected void onPostExecute(RemoteViews views) {
+        protected void onPostExecute(Void something) {
             System.out.println("Post Execute Called!!");
-            GetCafeterias(cafeterias);
+            //GetCafeterias(cafeterias);
 
+            loadFromJson();
+
+
+            System.out.println("LoadMeal in PostExecute: " + loadMeal);
+
+            //System.out.println("Current menu status: " + menus.html());
+
+            ComponentName thisWidget = new ComponentName(this.context.getPackageName(), WidgetActivity.class.getName());
+
+            AppWidgetManager manager = AppWidgetManager.getInstance(this.context);
+
+            if(updateRestaurant) {
+                int curindex = cafeterialist.indexOf(pref.getString("cafeterianame", cafeterialist.get(0)));
+                System.out.println("Current index is: " + curindex + ", " + pref.getString("cafeterianame", cafeterialist.get(0)));
+
+                if(curindex < cafeterialist.size() - 1) {
+                    System.out.println("Setting value to " + cafeterialist.get(curindex + 1));
+                    views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(curindex + 1));
+                    saveCafeteria(context,  names[curindex + 1]);
+                    System.out.println(cafeterialist.get(curindex + 1));
+                    System.out.println("New link: " + namelink.get(names[curindex + 1]));
+
+                } else {
+                    views.setTextViewText(R.id.widgetcafeteria, cafeterialist.get(0));
+                    saveCafeteria(context, names[0]);
+                    System.out.println(cafeterialist.get(0));
+                    System.out.println("New link: " + namelink.get(names[0]));
+
+                }
+
+                manager.updateAppWidget(thisWidget, views);
+
+                updateRestaurant = false;
+            }
+
+
+            String lastchoice = pref.getString("cafeterianame", cafeterialist.get(0));
             if(cafeterialist.isEmpty()) {
 
-                String lastchoice = pref.getString("cafeterianame", cafeterialist.get(0));
                 System.out.println("Last Choice found!! " + lastchoice);
                 cafeterialist.indexOf(lastchoice);
 
             }
 
-            System.out.println("LoadMeal in PostExecute: " + loadMeal);
+            Meal[] meals = new Meal[0];
+            for(CafeteriaItem item: jsonlist) {
+                if(item.cafeterianame.equals(lastchoice)) {
+                    meals = new Meal[item.meals.size()];
+                    for(int i = 0; i < item.meals.size(); ++i) {
+                        meals[i] = item.meals.get(i);
+                    }
+                }
+            }
 
-            //System.out.println("Current menu status: " + menus.html());
-            Meal[] meals = GetMenus(menus);
 
             ArrayList<RemoteViews> mealholder = new ArrayList<RemoteViews>();
             RemoteViews textView1 = new RemoteViews(context.getPackageName(), R.id.headermeal1);
@@ -647,7 +794,7 @@ public class WidgetActivity extends AppWidgetProvider {
                         for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
                             System.out.println("Setting meal name as: " + meals[i].dishes.get(j));
                             RemoteViews menuTextView = menuholder.get(j);
-                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
+                            this.views.setTextViewText(menuresource.get(menuTextView), simpleDish(meals[i].dishes.get(j)));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
                         }
                         for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
@@ -676,9 +823,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
                 }
 
-                ComponentName thisWidget = new ComponentName(this.context.getPackageName(), WidgetActivity.class.getName());
 
-                AppWidgetManager manager = AppWidgetManager.getInstance(this.context);
                 //manager.updateAppWidget(thisWidget, this.views);
 
                 //manager.updateAppWidget(thisWidget, textView);
@@ -729,58 +874,6 @@ public class WidgetActivity extends AppWidgetProvider {
             clickedIndex = 0;
 
             //Update widget issue ending here
-        }
-    }
-
-    private class RetrieveMenu extends AsyncTask<String, Void, Void> {
-
-        private RemoteViews views;
-        private Context context;
-        private AppWidgetManager WidgetManager;
-        private int currentWidgetId;
-        private int clickedIndex;
-
-        public RetrieveMenu(RemoteViews views, Context context, AppWidgetManager appWidgetManager, int currentWidgetId, int clickedIndex) {
-            this.views = views;
-            this.context = context;
-            this.WidgetManager = appWidgetManager;
-            this.currentWidgetId = currentWidgetId;
-            this.clickedIndex = clickedIndex;
-        }
-
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            Document doc = null;
-            try {
-                if(originallink.equals("http://www.hanyang.ac.kr/web/www/-2-")) {
-                    originallink = "http://www.hanyang.ac.kr/web/www/-2-?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=12&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
-                } else if (originallink.equals("http://www.hanyang.ac.kr/web/www/-248")) {
-                    originallink = "http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
-                }
-
-                System.out.println("Original link before retrieval: " + originallink);
-
-                doc = Jsoup.connect(originallink).get();
-
-                cafeterias = doc.select(".tab-7 > li");
-
-                menus = doc.select(".in-box");
-
-                //System.out.println("Current menu status at retrieve: " + menus.html());
-
-                retvalue = cafeterias.html();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void something) {
-
         }
     }
 

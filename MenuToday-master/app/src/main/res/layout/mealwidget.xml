@@ -22,6 +22,7 @@
         android:text=""
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
+        android:fontFamily="sans-serif-medium"
         android:id="@+id/currentTime"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
@@ -40,6 +41,133 @@
         android:layout_alignParentEnd="false"
         />
 
+    <!-- START FOR CHOICE LIST -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:id="@+id/cafeteriachoices">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice1"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice2"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice3"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice4"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice5"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice6"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice7"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="학생식당"
+            android:textSize="12dp"
+            android:textColor="#FFF"
+            android:background="@drawable/widgetbutton"
+            android:id="@+id/cafeteriachoice8"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+
+
+    </LinearLayout>
+
+<!-- WIDGET HEADER BEGINNING HERE -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

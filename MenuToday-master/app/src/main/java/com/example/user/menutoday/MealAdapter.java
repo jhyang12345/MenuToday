@@ -34,6 +34,67 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         }
     }
 
+    public String removeheader(String text) {
+        String ret = text.trim();
+        if(ret.charAt(0) == '[') {
+            int last = 0;
+            for(int i = 0; i < ret.length(); ++i) {
+                if(ret.charAt(i) == ']') {
+                    last = i;
+                    return removeheader(ret.substring(i + 1));
+                }
+            }
+            return ret.substring(last + 1);
+
+        }
+        return ret;
+    }
+
+    public String commaspacing(String text) {
+        if(!text.contains(",")) {
+            return text.trim();
+        } else {
+            int index = 0;
+            text = text.trim();
+            while(index < text.length()) {
+                if (text.charAt(index) ==',' && index + 1 < text.length() && text.charAt(index + 1) != ' ') {
+                    text = text.substring(0, index + 1) + ' ' + text.substring(index + 1);
+                }
+                index++;
+            }
+        }
+        return text.trim();
+    }
+
+    private String simpleDish(String dishname) {
+        String ret;
+        System.out.println("Dishname at simpleDish: " + dishname);
+        if(dishname.length() == 0) {
+            return "";
+        }
+        if(dishname.indexOf("(") == 0 && dishname.indexOf(")") >= dishname.indexOf("(")) {
+            ret = dishname.substring(dishname.indexOf("("), dishname.indexOf(")") + 1);
+            if(ret.matches(".*[a-zA-Z]+.*")) {
+                ret = ret.trim();
+                ret = dishname.substring(dishname.indexOf(")") + 1);
+
+                return simpleDish(commaspacing(removeheader(ret)));
+            }
+
+        } else if(dishname.indexOf("(") > 0 && dishname.indexOf(")") > dishname.indexOf("(")) {
+            ret = dishname.substring(dishname.indexOf("("), dishname.indexOf(")") + 1);
+            if(ret.matches(".*[a-zA-Z]+.*")) {
+                ret = ret.trim();
+                ret = dishname.substring(dishname.indexOf(")") + 1);
+
+                return simpleDish(commaspacing(removeheader(ret)));
+            }
+        }
+        return commaspacing(removeheader(dishname));
+    }
+
+
+
     //inner adapter
     class dishpriceAdapter extends ArrayAdapter<dishprice> {
         dishpriceAdapter(Context context, ArrayList<dishprice> dishes) {
@@ -66,7 +127,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             TextView dishName = (TextView) convertView.findViewById(R.id.dishName);
             TextView priceVal = (TextView) convertView.findViewById(R.id.price);
 
-            dishName.setText(dishname);
+            dishName.setText(simpleDish(dishname));
             priceVal.setText(price);
 
 

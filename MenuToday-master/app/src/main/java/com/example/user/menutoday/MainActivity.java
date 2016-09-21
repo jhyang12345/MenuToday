@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if(minutes > 2) {
+        if(minutes > 240) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
@@ -215,10 +215,10 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(MainActivity.this, namelink.get(parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
-                System.out.println(namelink.get(parent.getItemAtPosition(position).toString()));
-                originallink = namelink.get(parent.getItemAtPosition(position).toString());
+
+
                 cafeterianame = parent.getItemAtPosition(position).toString();
-                saveCafeteria(getApplicationContext(), originallink, cafeterianame);
+                saveCafeteria(getApplicationContext(), cafeterianame);
                 dialog.dismiss();
 
                 MainActivity.this.recreate();
@@ -238,11 +238,9 @@ public class MainActivity extends ActionBarActivity {
         return pref.getString("cafeterialink", "http://www.hanyang.ac.kr/web/www/-248");
     }
 
-    private void saveCafeteria(Context ctx, String cafeterialink, String cafeterianame) {
+    private void saveCafeteria(Context ctx, String cafeterianame) {
         SharedPreferences pref = ctx.getSharedPreferences("meals", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
-        editor.putString("cafeterialink", cafeterialink);
 
 
         editor.putString("cafeterianame", cafeterianame);
@@ -261,7 +259,7 @@ public class MainActivity extends ActionBarActivity {
                 ret = ret.trim();
                 ret = dishname.substring(dishname.indexOf(")") + 1);
 
-                return simpleDish(ret);
+                return simpleDish(commaspacing(removeheader(ret)));
             }
 
         } else if(dishname.indexOf("(") > 0 && dishname.indexOf(")") > dishname.indexOf("(")) {
@@ -270,10 +268,10 @@ public class MainActivity extends ActionBarActivity {
                 ret = ret.trim();
                 ret = dishname.substring(dishname.indexOf(")") + 1);
 
-                return simpleDish(ret);
+                return simpleDish(commaspacing(removeheader(ret)));
             }
         }
-        return dishname;
+        return commaspacing(removeheader(dishname));
     }
 
     private String stripWon(String price) {
@@ -367,6 +365,38 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private String removeheader(String text) {
+        String ret = text.trim();
+        if(ret.charAt(0) == '[') {
+            int last = 0;
+            for(int i = 0; i < ret.length(); ++i) {
+                if(ret.charAt(i) == ']') {
+                    last = i;
+                    return removeheader(ret.substring(i + 1));
+                }
+            }
+            return ret.substring(last + 1);
+
+        }
+        return ret;
+    }
+
+    private String commaspacing(String text) {
+        if(!text.contains(",")) {
+            return text.trim();
+        } else {
+            int index = 0;
+            text = text.trim();
+            while(index < text.length()) {
+                if (text.charAt(index) ==',' && index + 1 < text.length() && text.charAt(index + 1) != ' ') {
+                    text = text.substring(0, index + 1) + ' ' + text.substring(index + 1);
+                }
+                index++;
+            }
+        }
+        return text.trim();
+    }
+
     private void GetCafeterias(Elements elements) {
     //    cafeteriaSelector.setAlpha(1);
     //    cafeteriaSelector.setText(elements.select(".active").text());
@@ -440,47 +470,32 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(String... urls) {
-            URL url = null;
-            try {
-                url = new URL("http://www.hanyang.ac.kr/web/www/-253");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            HttpURLConnection urlConnection;
-
-            try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = url.openStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append('\n' + line);
-
-                }
-
-                urlConnection.disconnect();
-            } catch (IOException e) {
-                System.out.println("Error Found!");
-            } finally {
-
-            }
-
 
             Document doc = null;
             try {
                 doc = Jsoup.connect(originallink).get();
 
                 cafeterias = doc.select(".tab-7 > li");
-                GetCafeterias(cafeterias);
+             //   GetCafeterias(cafeterias);
 
                 menus = doc.select(".in-box");
-                GetMenus(menus);
+             //   GetMenus(menus);
                 retvalue = cafeterias.html();
 
 
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            names = new String[cafeterias.size()];
+            links = new String[cafeterias.size()];
+
+            for(int i = 0; i < cafeterias.size(); ++i) {
+                String buffer = cafeterias.get(i).html();
+                Document bufferdoc = Jsoup.parse(buffer);
+                names[i] = bufferdoc.text();
+                links[i] = bufferdoc.select("a").attr("href");
+                namelink.put(names[i], links[i]);
             }
 
             ArrayList<CafeteriaItem> cafeterialist = new ArrayList<CafeteriaItem>();
@@ -530,6 +545,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void something) {
             loadFromJson();
+
 
         //    GetCafeterias(cafeterias);
         //    GetMenus(menus);
