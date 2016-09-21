@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/widgetbackground"
 
+
     >
 
     <TextView
@@ -29,10 +30,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="학생식당"
-        android:textSize="14dp"
+        android:textSize="12dp"
         android:textColor="#FFF"
         android:background="@drawable/widgetbutton"
         android:id="@+id/widgetcafeteria"
+        android:fontFamily="sans-serif-medium"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="false"
@@ -50,11 +52,11 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
-
+            android:fontFamily="sans-serif-medium"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:id="@+id/headermeal1"
@@ -64,11 +66,11 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
-
+            android:fontFamily="sans-serif-medium"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:id="@+id/headermeal2"
@@ -78,11 +80,11 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
-
+            android:fontFamily="sans-serif-medium"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:id="@+id/headermeal3"
@@ -92,11 +94,11 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
-
+            android:fontFamily="sans-serif-medium"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:id="@+id/headermeal4"
@@ -107,11 +109,11 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
-
+            android:fontFamily="sans-serif-medium"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:id="@+id/headermeal5"
@@ -138,7 +140,7 @@
             android:textColor="#fff"
             android:text=""
             android:textAlignment="viewStart"
-
+            android:fontFamily="sans-serif-medium"
             android:padding="4dp"
             android:paddingTop="8dp"
             android:id="@+id/menu1"
@@ -153,7 +155,7 @@
             android:textColor="#fff"
             android:text=""
             android:textAlignment="viewStart"
-
+            android:fontFamily="sans-serif-medium"
             android:padding="4dp"
             android:paddingTop="8dp"
             android:id="@+id/menu2"
@@ -167,7 +169,7 @@
             android:textColor="#fff"
             android:text=""
             android:textAlignment="viewStart"
-
+            android:fontFamily="sans-serif-medium"
             android:padding="4dp"
             android:paddingTop="8dp"
             android:id="@+id/menu3"
@@ -182,7 +184,7 @@
             android:textColor="#fff"
             android:text=""
             android:textAlignment="viewStart"
-
+            android:fontFamily="sans-serif-medium"
             android:padding="4dp"
             android:paddingTop="8dp"
             android:id="@+id/menu4"
@@ -197,7 +199,7 @@
             android:textColor="#fff"
             android:text=""
             android:textAlignment="viewStart"
-
+            android:fontFamily="sans-serif-medium"
             android:padding="4dp"
             android:paddingTop="8dp"
             android:id="@+id/menu5"

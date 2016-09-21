@@ -24,4 +24,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile project(':gson-2.7-javadoc')
+    compile 'com.google.code.gson:gson:2.7'
 }

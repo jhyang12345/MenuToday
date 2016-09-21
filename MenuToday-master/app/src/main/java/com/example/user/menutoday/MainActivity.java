@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,9 +48,24 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.SAXParserFactory;
+
+
+class CafeteriaItem {
+
+    String cafeterianame;
+    ArrayList<Meal> meals;
+
+    public CafeteriaItem(String cafeterianame, ArrayList<Meal> meals) {
+        this.cafeterianame = cafeterianame;
+        this.meals = meals;
+    }
+
+}
 
 public class MainActivity extends ActionBarActivity {
 
@@ -70,6 +86,8 @@ public class MainActivity extends ActionBarActivity {
 
     String originallink;//"http://www.hanyang.ac.kr/web/www/-248?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=13&_foodView_WAR_foodportlet_sFoodDateYear=2016&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=8";
     String cafeterianame;
+
+    SharedPreferences pref;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -97,7 +115,20 @@ public class MainActivity extends ActionBarActivity {
 
         originallink  = getCafeteria(this.getApplicationContext());
 
-        new RetrieveURL().execute();
+        pref = this.getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+
+        long mils = pref.getLong("TIME", 0);
+        Date today = new Date();
+        long curtime = today.getTime();
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
+        System.out.println("Saved time: " + mils + " " + curtime);
+        System.out.println("Minutes: " + minutes);
+        if(minutes > 2) {
+            new RetrieveURL().execute();
+        } else {
+            System.out.println("LOADING FROM JSON FILE!!!");
+            loadFromJson();
+        }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -133,6 +164,37 @@ public class MainActivity extends ActionBarActivity {
         cafeteriaSelector.setAlpha(1);
     }
 
+    private void loadFromJson() {
+        String wholewebsite = pref.getString("allitems", "{}");
+        System.out.println(wholewebsite);
+        Gson gson = new Gson();
+        CafeteriaItem[] cafeterialist = gson.fromJson(wholewebsite, CafeteriaItem[].class);
+
+        names = new String[cafeterialist.length];
+
+        for(int i = 0; i < cafeterialist.length; ++i) {
+            System.out.println("From JSON OBJECT: " +  cafeterialist[i].cafeterianame);
+            for(int j = 0; j < cafeterialist[i].meals.size(); ++j) {
+                System.out.println(cafeterialist[i].meals.get(j).name);
+            }
+            names[i] = cafeterialist[i].cafeterianame;
+        }
+        pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong("TIME", new Date().getTime());
+        editor.commit();
+        String currentname = pref.getString("cafeterianame", "학생식당");
+        updateCafeteria(currentname);
+        for(CafeteriaItem item: cafeterialist) {
+            if(item.cafeterianame.equals(currentname)) {
+                loadMeals(item.meals);
+
+                break;
+            }
+        }
+
+    }
+
     private void OpenDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -161,7 +223,7 @@ public class MainActivity extends ActionBarActivity {
 
                 MainActivity.this.recreate();
 
-                new RetrieveURL().execute();
+                pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
 
             }
         });
@@ -241,16 +303,17 @@ public class MainActivity extends ActionBarActivity {
         return price;
     }
 
-    private void loadMeals() {
-        ArrayList<Meal> meallist = new ArrayList<Meal>();
+    private void loadMeals(ArrayList<Meal> mealmenus) {
+        ArrayList<Meal> meallist = mealmenus;
+        /*
         for (int i = 0; i < meals.length; ++i) {
             if (!meals[i].name.trim().equals("공통찬")) {
                 System.out.println('"' + meals[i].name.trim() + '"');
                 meallist.add(meals[i]);
 
             }
-
         }
+        */
         MealAdapter adapter = new MealAdapter(this, meallist);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -298,15 +361,15 @@ public class MainActivity extends ActionBarActivity {
                 meals[i] = new Meal(elements.get(i).select(".d-title2").text(), dishes, prices);
 
             }
-            loadMeals();
+
 
         }
 
     }
 
     private void GetCafeterias(Elements elements) {
-        cafeteriaSelector.setAlpha(1);
-        cafeteriaSelector.setText(elements.select(".active").text());
+    //    cafeteriaSelector.setAlpha(1);
+    //    cafeteriaSelector.setText(elements.select(".active").text());
         //cafeteriaSelector.setText(elements.first().text());
         names = new String[elements.size()];
         links = new String[elements.size()];
@@ -319,6 +382,11 @@ public class MainActivity extends ActionBarActivity {
             System.out.println(links[i]);
         }
 
+    }
+
+    private void updateCafeteria(String cafeterianame) {
+        cafeteriaSelector.setAlpha(1);
+        cafeteriaSelector.setText(cafeterianame);
     }
 
     @Override
@@ -404,14 +472,54 @@ public class MainActivity extends ActionBarActivity {
                 doc = Jsoup.connect(originallink).get();
 
                 cafeterias = doc.select(".tab-7 > li");
+                GetCafeterias(cafeterias);
 
                 menus = doc.select(".in-box");
-
+                GetMenus(menus);
                 retvalue = cafeterias.html();
 
 
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            ArrayList<CafeteriaItem> cafeterialist = new ArrayList<CafeteriaItem>();
+
+            try {
+                for (int i = 0; i < links.length; ++i) {
+                    String cafeterianame = names[i];
+                    doc = Jsoup.connect(links[i]).get();
+
+                    menus = doc.select(".in-box");
+                    GetMenus(menus);
+
+                    ArrayList<Meal> CafeteriaMeals = new ArrayList<Meal>();
+                    for(int x = 0; x < meals.length; ++x) {
+                        CafeteriaMeals.add(meals[x]);
+
+                        /*ArrayList<String> dishlist = new ArrayList<String>();
+                        ArrayList<String> pricelist = new ArrayList<String>();
+                        for(int y = 0; y < meals[x].dishes.size(); ++y) {
+                            dishlist.add(meals[x].dishes.get(y));
+                            pricelist.add(meals[x].prices.get(y));
+
+                        }*/
+
+                    }
+                    cafeterialist.add(new CafeteriaItem(cafeterianame, CafeteriaMeals));
+
+                }
+
+                Gson gson = new Gson();
+
+                String prettyJson = gson.toJson(cafeterialist);
+                pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("allitems", prettyJson);
+                editor.commit();
+
+            } catch(IOException e) {
+
             }
 
 
@@ -421,8 +529,10 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void something) {
-            GetCafeterias(cafeterias);
-            GetMenus(menus);
+            loadFromJson();
+
+        //    GetCafeterias(cafeterias);
+        //    GetMenus(menus);
             //UpdateText(retvalue);
         }
     }
