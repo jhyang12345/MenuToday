@@ -59,6 +59,38 @@
                 <action android:name="android.appwidget.action.HEADER_CLICK5"></action>
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK1"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK2"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK3"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK4"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK5"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK6"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK7"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.CAFETERIA_CLICK8"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.NEXT_MENU"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.PREV_MENU"/>
+            </intent-filter>
+
 
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/cafeteriawidget"></meta-data>

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/widgetbackground"
 
-
     >
 
     <TextView
@@ -24,6 +23,7 @@
         android:layout_marginBottom="5dp"
         android:fontFamily="sans-serif-medium"
         android:id="@+id/currentTime"
+        android:textColor="#777"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
 
@@ -35,137 +35,12 @@
         android:textColor="#FFF"
         android:background="@drawable/widgetbutton"
         android:id="@+id/widgetcafeteria"
+
         android:fontFamily="sans-serif-medium"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="false"
         />
-
-    <!-- START FOR CHOICE LIST -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:visibility="gone"
-        android:id="@+id/cafeteriachoices">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice1"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice2"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice3"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice4"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice5"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice6"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice7"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="학생식당"
-            android:textSize="12dp"
-            android:textColor="#FFF"
-            android:background="@drawable/widgetbutton"
-            android:id="@+id/cafeteriachoice8"
-            android:fontFamily="sans-serif-medium"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="false"
-            />
-
-
-
-    </LinearLayout>
 
 <!-- WIDGET HEADER BEGINNING HERE -->
     <LinearLayout
@@ -189,7 +64,7 @@
             android:paddingBottom="4dp"
             android:id="@+id/headermeal1"
             android:gravity="center_horizontal"
-
+            android:background="@drawable/nounderline"
             />
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
@@ -203,7 +78,7 @@
             android:paddingBottom="4dp"
             android:id="@+id/headermeal2"
             android:gravity="center_horizontal"
-
+            android:background="@drawable/nounderline"
             />
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
@@ -217,7 +92,7 @@
             android:paddingBottom="4dp"
             android:id="@+id/headermeal3"
             android:gravity="center_horizontal"
-
+            android:background="@drawable/nounderline"
             />
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
@@ -231,7 +106,7 @@
             android:paddingBottom="4dp"
             android:id="@+id/headermeal4"
             android:gravity="center_horizontal"
-
+            android:background="@drawable/nounderline"
             />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -246,7 +121,7 @@
             android:paddingBottom="4dp"
             android:id="@+id/headermeal5"
             android:gravity="center_horizontal"
-
+            android:background="@drawable/nounderline"
             />
 
 
@@ -335,5 +210,212 @@
             />
 
     </LinearLayout>
+
+    <!-- START FOR CHOICE LIST -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:elevation="10dp"
+
+        android:visibility="gone"
+
+        android:background="@drawable/widgetchoicesbackground"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/cafeteriachoices">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice1"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice2"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice3"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice4"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice5"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice6"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+            android:background="@drawable/cafeteriaunderline"
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice7"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#FFF"
+
+
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+
+            android:id="@+id/cafeteriachoice8"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 / 3"
+            android:fontFamily="sans-serif-medium"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:textColor="#cfcfcf"
+            android:id="@+id/pagercount"
+            android:gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

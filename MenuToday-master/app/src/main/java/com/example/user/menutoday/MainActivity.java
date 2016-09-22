@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if(minutes > 240) {
+        if(minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
@@ -181,8 +181,6 @@ public class MainActivity extends ActionBarActivity {
         }
         pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putLong("TIME", new Date().getTime());
-        editor.commit();
         String currentname = pref.getString("cafeterianame", "학생식당");
         updateCafeteria(currentname);
         for(CafeteriaItem item: cafeterialist) {
@@ -530,6 +528,10 @@ public class MainActivity extends ActionBarActivity {
                 String prettyJson = gson.toJson(cafeterialist);
                 pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
+
+                editor.putLong("TIME", new Date().getTime());
+                editor.commit();
+
                 editor.putString("allitems", prettyJson);
                 editor.commit();
 
