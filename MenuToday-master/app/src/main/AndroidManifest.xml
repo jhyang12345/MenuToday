@@ -91,6 +91,10 @@
                 <action android:name="android.appwidget.action.PREV_MENU"/>
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.appwidget.action.MANUAL_UPDATE"/>
+            </intent-filter>
+
 
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/cafeteriawidget"></meta-data>

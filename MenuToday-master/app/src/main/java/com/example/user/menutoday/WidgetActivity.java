@@ -84,8 +84,11 @@ public class WidgetActivity extends AppWidgetProvider {
     public static final String NEXT_MENU = "android.appwidget.action.NEXT_MENU";
     public static final String PREV_MENU = "android.appwidget.action.PREV_MENU";
 
+    public static final String MANUAL_UPDATE = "android.appwidget.action.MANUAL_UPDATE";
+
     static int cafeteriaindex = 0;
     static boolean settingRestaurant = false;
+    static boolean cafeterialistopen = false;
 
     static HashMap<String, String> namelink = new HashMap<String, String>();
 
@@ -95,6 +98,10 @@ public class WidgetActivity extends AppWidgetProvider {
 
     static boolean nextMenu = false;
     static boolean prevMenu = false;
+
+    static boolean changingMenu = false;
+
+    static boolean manualUpdate = false;
 
     static String[] weekdays = { "", "일", "월", "화", "수", "목", "금", "토"};
 
@@ -218,6 +225,12 @@ public class WidgetActivity extends AppWidgetProvider {
 
             views.setOnClickPendingIntent(R.id.menu1, nextPendingIntent);
 
+            Intent manualIntent = new Intent(context, getClass());
+            manualIntent.setAction(MANUAL_UPDATE);
+
+            PendingIntent manualPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, manualIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            views.setOnClickPendingIntent(R.id.currentTime, manualPendingIntent);
 
             ComponentName thisWidget = new ComponentName(context,WidgetActivity.class);
 
@@ -262,21 +275,6 @@ public class WidgetActivity extends AppWidgetProvider {
         RemoteViews textView4 = new RemoteViews(context.getPackageName(), R.id.headermeal4);
         RemoteViews textView5 = new RemoteViews(context.getPackageName(), R.id.headermeal5);
 
-        float scale = context.getResources().getDisplayMetrics().density;
-        int dpAsPixels = (int) (4 * scale + 0.5f);
-
-        views.setInt(R.id.headermeal1, "setBackgroundResource", R.drawable.nounderline);
-        views.setInt(R.id.headermeal2, "setBackgroundResource", R.drawable.nounderline);
-        views.setInt(R.id.headermeal3, "setBackgroundResource", R.drawable.nounderline);
-        views.setInt(R.id.headermeal4, "setBackgroundResource", R.drawable.nounderline);
-        views.setInt(R.id.headermeal5, "setBackgroundResource", R.drawable.nounderline);
-
-        views.setViewPadding(R.id.headermeal1, 0, dpAsPixels, 0, dpAsPixels);
-        views.setViewPadding(R.id.headermeal2, 0, dpAsPixels, 0, dpAsPixels);
-        views.setViewPadding(R.id.headermeal3, 0, dpAsPixels, 0, dpAsPixels);
-        views.setViewPadding(R.id.headermeal4, 0, dpAsPixels, 0, dpAsPixels);
-        views.setViewPadding(R.id.headermeal5, 0, dpAsPixels, 0, dpAsPixels);
-
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
 
         AppWidgetManager.getInstance(context).updateAppWidget(
@@ -285,6 +283,7 @@ public class WidgetActivity extends AppWidgetProvider {
         ComponentName thisAppWidget = new ComponentName(context.getPackageName(), WidgetActivity.class.getName());
         int[] appWidgetIds = manager.getAppWidgetIds(thisAppWidget);
 
+        System.out.println("Current settingRestaurant: " + settingRestaurant + " Current updateRestaurant: " + updateRestaurant + " " + intent.getAction());
 
         if(intent.getAction().equals(ACTION_UPDATE_CLICK)) {
             if(!cafeterialist.isEmpty()) {
@@ -300,6 +299,7 @@ public class WidgetActivity extends AppWidgetProvider {
                     new ComponentName(context, WidgetActivity.class),views);
 
             updateRestaurant = true;
+
 
             System.out.println("Update Restaurant set as: " + updateRestaurant);
 
@@ -317,6 +317,7 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal1, context.getResources().getColor(R.color.White));
 
             clickedIndex = 0;
+            saveMealIndex(context, clickedIndex);
             loadMeal = true;
             System.out.println("Set loadMeal as: " + loadMeal);
             System.out.println("Set clickedIndex as: " + clickedIndex);
@@ -337,6 +338,7 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal2, context.getResources().getColor(R.color.White));
 
             clickedIndex = 1;
+            saveMealIndex(context, clickedIndex);
             loadMeal = true;
             System.out.println("Set loadMeal as: " + loadMeal);
             System.out.println("Set clickedIndex as: " + clickedIndex);
@@ -356,6 +358,7 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal3, context.getResources().getColor(R.color.White));
 
             clickedIndex = 2;
+            saveMealIndex(context, clickedIndex);
             loadMeal = true;
             System.out.println("Set loadMeal as: " + loadMeal);
             System.out.println("Set clickedIndex as: " + clickedIndex);
@@ -375,6 +378,7 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal4, context.getResources().getColor(R.color.White));
 
             clickedIndex = 3;
+            saveMealIndex(context, clickedIndex);
             loadMeal = true;
             System.out.println("Set loadMeal as: " + loadMeal);
             System.out.println("Set clickedIndex as: " + clickedIndex);
@@ -394,6 +398,7 @@ public class WidgetActivity extends AppWidgetProvider {
             views.setTextColor(R.id.headermeal5, context.getResources().getColor(R.color.White));
 
             clickedIndex = 4;
+            saveMealIndex(context, clickedIndex);
             loadMeal = true;
             System.out.println("Set loadMeal as: " + loadMeal);
             System.out.println("Set clickedIndex as: " + clickedIndex);
@@ -451,15 +456,54 @@ public class WidgetActivity extends AppWidgetProvider {
             settingRestaurant = true;
 
             onUpdate(context, manager, appWidgetIds);
+        } else if(cafeterialistopen) {
+            views.setViewVisibility(R.id.widgetcafeteria, View.VISIBLE);
+
+            views.setViewVisibility(R.id.cafeteriachoices, View.GONE);
+
+            System.out.println("Setting restaurant and non update!!!");
+
+            cafeterialistopen = false;
+
         } else if(intent.getAction().equals(NEXT_MENU)) {
             nextMenu = true;
+
+            changingMenu = true;
 
             onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(PREV_MENU)) {
             prevMenu = true;
 
+            changingMenu = true;
+
+            onUpdate(context, manager, appWidgetIds);
+        } else if(intent.getAction().equals(MANUAL_UPDATE)) {
+            manualUpdate = true;
+
             onUpdate(context, manager, appWidgetIds);
         }
+
+        float scale = context.getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (4 * scale + 0.5f);
+
+        if(!changingMenu) {
+            views.setInt(R.id.headermeal1, "setBackgroundResource", R.drawable.nounderline);
+            views.setInt(R.id.headermeal2, "setBackgroundResource", R.drawable.nounderline);
+            views.setInt(R.id.headermeal3, "setBackgroundResource", R.drawable.nounderline);
+            views.setInt(R.id.headermeal4, "setBackgroundResource", R.drawable.nounderline);
+            views.setInt(R.id.headermeal5, "setBackgroundResource", R.drawable.nounderline);
+
+        } else {
+            changingMenu = false;
+        }
+
+
+
+        views.setViewPadding(R.id.headermeal1, 0, dpAsPixels, 0, dpAsPixels);
+        views.setViewPadding(R.id.headermeal2, 0, dpAsPixels, 0, dpAsPixels);
+        views.setViewPadding(R.id.headermeal3, 0, dpAsPixels, 0, dpAsPixels);
+        views.setViewPadding(R.id.headermeal4, 0, dpAsPixels, 0, dpAsPixels);
+        views.setViewPadding(R.id.headermeal5, 0, dpAsPixels, 0, dpAsPixels);
 
      //   onUpdate(context, manager, appWidgetIds);
 
@@ -632,7 +676,21 @@ public class WidgetActivity extends AppWidgetProvider {
 
     }
 
+    private void saveMealIndex(Context ctx, int index) {
+        pref= ctx.getSharedPreferences("meals", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
 
+        editor.putInt("mealindex", index);
+        editor.commit();
+    }
+
+    private void saveMenuIndex(Context ctx, int index) {
+        pref = ctx.getSharedPreferences("meals", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putInt("menuindex", index);
+        editor.commit();
+    }
 
     private void saveCafeteria(Context ctx,  String cafeterianame) {
         pref = ctx.getSharedPreferences("meals", Context.MODE_PRIVATE);
@@ -677,8 +735,8 @@ public class WidgetActivity extends AppWidgetProvider {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
             System.out.println("Saved time: " + mils + " " + curtime);
             System.out.println("Minutes: " + minutes);
-            if(minutes > 360) {
-
+            if(minutes > 360 || manualUpdate) {
+                manualUpdate = false;
                 try {
 
                     System.out.println("Original link before retrieval: " + originallink);
@@ -776,6 +834,8 @@ public class WidgetActivity extends AppWidgetProvider {
                 this.views.setViewVisibility(R.id.widgetcafeteria, View.GONE);
 
                 views.setViewVisibility(R.id.cafeteriachoices, View.VISIBLE);
+
+                cafeterialistopen = true;
 
                 manager.updateAppWidget(thisWidget, views);
 
@@ -883,6 +943,8 @@ public class WidgetActivity extends AppWidgetProvider {
                 this.views.setViewVisibility(R.id.widgetcafeteria, View.VISIBLE);
 
                 settingRestaurant = false;
+                updateRestaurant = false;
+                cafeterialistopen = false;
                 cafeteriaindex = 0;
 
             }
@@ -916,6 +978,13 @@ public class WidgetActivity extends AppWidgetProvider {
 
             //Update widget issue starting here
 
+            if(!nextMenu && !prevMenu) {
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.putInt("menuindex", 0);
+                editor.commit();
+            }
+
             for(int index = 0; index < indexlist.size(); index++) {
             //for(int i = 0; i < meals.length; i++) {
                 int i = indexlist.get(index);
@@ -936,13 +1005,58 @@ public class WidgetActivity extends AppWidgetProvider {
 
 
                 if(loadMeal) {
+
                     if(index == clickedIndex) {
                         System.out.println("CURRENT INDEX AST LOADMEAL IS: " + i);
                         this.views.setTextColor(mealresource.get(textView), context.getResources().getColor(R.color.White));
                         this.views.setInt(mealresource.get(textView), "setBackgroundResource", R.drawable.underline);
                         this.views.setViewPadding(mealresource.get(textView), 0, dpAsPixels, 0, dpAsPixels);
-                        this.views.setTextViewText(R.id.pagercount, index + " / " + meals[i].dishes.size());
+                        this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
                         System.out.println("Coloring for meal: " + meals[i].name);
+
+                        if(nextMenu) {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 1);
+                            System.out.println("Current Menu Index: " + curindex);
+                            int nextindex = 0;
+                            if(curindex < meals[i].dishes.size() - 1) nextindex = curindex + 1;
+                            if(curindex == meals[i].dishes.size() - 1) nextindex = 0;
+
+                            saveMenuIndex(context, nextindex);
+
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+
+                            this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
+
+                            nextMenu = false;
+                        } else if(prevMenu) {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 1);
+                            System.out.println("Current Menu Index: " + curindex);
+                            int nextindex = 0;
+                            if(curindex > 0) nextindex = curindex - 1;
+                            if(curindex == 0) nextindex = meals[i].dishes.size() - 1;
+
+                            saveMenuIndex(context, nextindex);
+
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+
+                            this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
+
+                            prevMenu = false;
+                        } else {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 0);
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(curindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+                        }
+
+                        /*
                         for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
                             System.out.println("Setting meal name as: " + meals[i].dishes.get(j));
                             RemoteViews menuTextView = menuholder.get(j);
@@ -953,31 +1067,81 @@ public class WidgetActivity extends AppWidgetProvider {
                         for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
                             RemoteViews menuTextView = menuholder.get(j);
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
-                        }
+                        }*/
 
 
                     }
+
+
                     //loadMeal = false;
-                } else if(!loadMeal && index == 0) {
-                    System.out.println("CURRENT INDEX BEFORE LOADMEAL IS: " + i);
-                    this.views.setTextColor(mealresource.get(textView), context.getResources().getColor(R.color.White));
-                    this.views.setInt(mealresource.get(textView), "setBackgroundResource", R.drawable.underline);
-                    this.views.setViewPadding(mealresource.get(textView), 0, dpAsPixels, 0, dpAsPixels);
-                    this.views.setTextViewText(R.id.pagercount, index + " / " + meals[i].dishes.size());
-                    System.out.println("Coloring for meal: " + meals[i].name);
-                    for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
-                        System.out.println(meals[i].dishes.get(j));
-                        RemoteViews menuTextView = menuholder.get(j);
-                        this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
+                } else if(!loadMeal) {
+                    int mealindex = pref.getInt("mealindex", 0);
+                    clickedIndex = mealindex;
 
-                        this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+                    if(index == clickedIndex) {
+                        System.out.println("CURRENT INDEX BEFORE LOADMEAL IS: " + i);
+                        this.views.setTextColor(mealresource.get(textView), context.getResources().getColor(R.color.White));
+                        this.views.setInt(mealresource.get(textView), "setBackgroundResource", R.drawable.underline);
+                        this.views.setViewPadding(mealresource.get(textView), 0, dpAsPixels, 0, dpAsPixels);
+                        this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
+                        System.out.println("Coloring for meal: " + meals[i].name);
+
+
+                        if (nextMenu) {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 1);
+                            System.out.println("Current Menu Index: " + curindex);
+                            int nextindex = 0;
+                            if (curindex < meals[i].dishes.size() - 1) nextindex = curindex + 1;
+                            if (curindex == meals[i].dishes.size() - 1) nextindex = 0;
+
+                            saveMenuIndex(context, nextindex);
+
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+
+                            this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
+
+                            nextMenu = false;
+                        } else if (prevMenu) {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 1);
+                            System.out.println("Current Menu Index: " + curindex);
+                            int nextindex = 0;
+                            if (curindex > 0) nextindex = curindex - 1;
+                            if (curindex == 0) nextindex = meals[i].dishes.size() - 1;
+
+                            saveMenuIndex(context, nextindex);
+
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+
+                            this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
+
+                            prevMenu = false;
+                        } else {
+                            RemoteViews menuTextView = menuholder.get(0);
+
+                            int curindex = pref.getInt("menuindex", 0);
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(curindex));
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+                        }
+                        /*
+                        for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
+                            System.out.println(meals[i].dishes.get(j));
+                            RemoteViews menuTextView = menuholder.get(j);
+                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
+
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
+                        }
+                        for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
+                            RemoteViews menuTextView = menuholder.get(j);
+                            this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
+                        }*/
+
                     }
-                    for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
-                        RemoteViews menuTextView = menuholder.get(j);
-                        this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
-                    }
-
-
                 }
 
 
@@ -985,10 +1149,6 @@ public class WidgetActivity extends AppWidgetProvider {
 
                 //manager.updateAppWidget(thisWidget, textView);
 
-                if(index == indexlist.size() - 1) {//meals.length - 1) {
-                    System.out.println("Removing border!");
-                    textView.setInt(R.id.headermeal, "setBackgroundResource", R.drawable.mealtimebackgroundnoborder);
-                }
 
    //             AppWidgetManager.getInstance(this.context).updateAppWidget(
    //                     new ComponentName(this.context.getPackageName(), WidgetActivity.class.getName()), textView);
