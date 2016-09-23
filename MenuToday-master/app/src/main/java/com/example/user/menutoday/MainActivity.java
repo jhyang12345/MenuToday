@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if(minutes > 360) {
+        if(false) {//(minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
