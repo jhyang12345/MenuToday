@@ -1,6 +1,8 @@
 package com.example.user.menutoday;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by user on 2016-09-17.
@@ -156,9 +159,15 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             );*/
         }
 
+        AssetManager am = getContext().getAssets();
+
+        Typeface typeface = Typeface.createFromAsset(am,
+                String.format(Locale.KOREAN, "fonts/malgun.ttf", "malgun.ttf"));
+
         TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
 
         cafeteriaName.setText(name);
+        cafeteriaName.setTypeface(typeface);
 
         convertView.setEnabled(false);
         convertView.setOnClickListener(null);
@@ -181,6 +190,9 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
             TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
             TextView dishprice = (TextView) newitem.findViewById(R.id.price);
+
+            dishname.setTypeface(typeface);
+            dishprice.setTypeface(typeface);
 
             int pL = newitem.getPaddingLeft();
             int pT = newitem.getPaddingTop();

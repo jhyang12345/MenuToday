@@ -20,6 +20,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LinearLayout holder = (LinearLayout) findViewById(R.id.mainappheader);
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenDialog();
+            }
+        });
 
         cafeteriaSelector = (Button) findViewById(R.id.selector);
         cafeteriaSelector.setOnClickListener(new View.OnClickListener() {
