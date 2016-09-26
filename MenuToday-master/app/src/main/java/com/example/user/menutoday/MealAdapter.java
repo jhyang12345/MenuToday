@@ -282,4 +282,5 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         return convertView;
     }
 
+
 }
