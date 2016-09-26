@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -157,29 +158,30 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
 
-            viewholder = new ViewHolderItem();
 
-            viewholder.cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
-
-            viewholder.listview = (LinearLayout) convertView.findViewById(R.id.dishList);
-
-            convertView.setTag(viewholder);
-        } else {
-            viewholder = (ViewHolderItem) convertView.getTag();
+            //convertView.setTag(viewholder);
         }
 
         TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
 
         cafeteriaName.setText(name);
 
+        LinearLayout listview = (LinearLayout) convertView.findViewById(R.id.dishList);
+
         AssetManager am = getContext().getAssets();
 
         Typeface typeface = Typeface.createFromAsset(am,
                 String.format(Locale.KOREAN, "fonts/malgun.ttf", "fonts/malgun.ttf"));
 
-        viewholder.cafeteriaName.setText(name);
+        cafeteriaName.setText(name);
 
         ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
+
+        int childCount = (listview).getChildCount();
+
+        if(childCount != 0) {
+            return convertView;
+        }
 
         for(int i = 0; i < getItem(position).dishes.size(); ++i) {
 
@@ -199,16 +201,16 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
 
             if(i == getItem(position).dishes.size() - 1) {
-                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.noborder));
+                newitem.setBackground(listview.getResources().getDrawable(R.drawable.noborder));
                 newitem.setPadding(pL, pT, pR, pB);
             } else {
-                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.borderbottom));
+                newitem.setBackground(listview.getResources().getDrawable(R.drawable.borderbottom));
                 newitem.setPadding(pL, pT, pR, pB);
             }
 
             dishname.setText(getItem(position).dishes.get(i));
             dishprice.setText(getItem(position).prices.get(i));
-            viewholder.listview.addView(newitem);
+            listview.addView(newitem);
 
         }
         //cafeteriaName.setTypeface(typeface);

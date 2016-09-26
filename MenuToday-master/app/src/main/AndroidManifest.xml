@@ -92,6 +92,10 @@
             </intent-filter>
 
             <intent-filter>
+                <action android:name="android.appwidget.action.MENU_CLICKED"/>
+            </intent-filter>
+
+            <intent-filter>
                 <action android:name="android.appwidget.action.MANUAL_UPDATE"/>
             </intent-filter>
 

@@ -20,6 +20,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,6 +104,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LinearLayout holder = (LinearLayout) findViewById(R.id.mainappheader);
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenDialog();
+            }
+        });
+
         cafeteriaSelector = (Button) findViewById(R.id.selector);
         cafeteriaSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if(minutes > 360) {
+        if (minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
@@ -306,7 +315,6 @@ public class MainActivity extends ActionBarActivity {
             if (!meals[i].name.trim().equals("공통찬")) {
                 System.out.println('"' + meals[i].name.trim() + '"');
                 meallist.add(meals[i]);
-
             }
         }
         */
@@ -396,8 +404,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void GetCafeterias(Elements elements) {
-    //    cafeteriaSelector.setAlpha(1);
-    //    cafeteriaSelector.setText(elements.select(".active").text());
+        //    cafeteriaSelector.setAlpha(1);
+        //    cafeteriaSelector.setText(elements.select(".active").text());
         //cafeteriaSelector.setText(elements.first().text());
         names = new String[elements.size()];
         links = new String[elements.size()];
@@ -474,10 +482,10 @@ public class MainActivity extends ActionBarActivity {
                 doc = Jsoup.connect(originallink).get();
 
                 cafeterias = doc.select(".tab-7 > li");
-             //   GetCafeterias(cafeterias);
+                //   GetCafeterias(cafeterias);
 
                 menus = doc.select(".in-box");
-             //   GetMenus(menus);
+                //   GetMenus(menus);
                 retvalue = cafeterias.html();
 
 
@@ -515,7 +523,6 @@ public class MainActivity extends ActionBarActivity {
                         for(int y = 0; y < meals[x].dishes.size(); ++y) {
                             dishlist.add(meals[x].dishes.get(y));
                             pricelist.add(meals[x].prices.get(y));
-
                         }*/
 
                     }
@@ -549,8 +556,8 @@ public class MainActivity extends ActionBarActivity {
             loadFromJson();
 
 
-        //    GetCafeterias(cafeterias);
-        //    GetMenus(menus);
+            //    GetCafeterias(cafeterias);
+            //    GetMenus(menus);
             //UpdateText(retvalue);
         }
     }

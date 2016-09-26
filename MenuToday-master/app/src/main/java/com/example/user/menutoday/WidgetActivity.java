@@ -84,6 +84,8 @@ public class WidgetActivity extends AppWidgetProvider {
     public static final String NEXT_MENU = "android.appwidget.action.NEXT_MENU";
     public static final String PREV_MENU = "android.appwidget.action.PREV_MENU";
 
+    public static final String MENU_CLICKED = "android.appwidget.action.MENU_CLICKED";
+
     public static final String MANUAL_UPDATE = "android.appwidget.action.MANUAL_UPDATE";
 
     static int cafeteriaindex = 0;
@@ -223,7 +225,15 @@ public class WidgetActivity extends AppWidgetProvider {
             PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             PendingIntent prevPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            views.setOnClickPendingIntent(R.id.menu1, nextPendingIntent);
+            views.setOnClickPendingIntent(R.id.rightclick, nextPendingIntent);
+            views.setOnClickPendingIntent(R.id.leftclick, prevPendingIntent);
+
+            Intent menuIntent = new Intent(context, getClass());
+            menuIntent.setAction(MENU_CLICKED);
+
+            PendingIntent menuPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, menuIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            views.setOnClickPendingIntent(R.id.menu1, menuPendingIntent);
 
             Intent manualIntent = new Intent(context, getClass());
             manualIntent.setAction(MANUAL_UPDATE);
@@ -293,7 +303,7 @@ public class WidgetActivity extends AppWidgetProvider {
             }
 
             AppWidgetManager.getInstance(context).updateAppWidget(
-                new ComponentName(context, WidgetActivity.class),views);
+                    new ComponentName(context, WidgetActivity.class),views);
 
             AppWidgetManager.getInstance(context).updateAppWidget(
                     new ComponentName(context, WidgetActivity.class),views);
@@ -477,6 +487,8 @@ public class WidgetActivity extends AppWidgetProvider {
             changingMenu = true;
 
             onUpdate(context, manager, appWidgetIds);
+        } else if(intent.getAction().equals(MENU_CLICKED)) {
+            onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(MANUAL_UPDATE)) {
             manualUpdate = true;
 
@@ -505,7 +517,7 @@ public class WidgetActivity extends AppWidgetProvider {
         views.setViewPadding(R.id.headermeal4, 0, dpAsPixels, 0, dpAsPixels);
         views.setViewPadding(R.id.headermeal5, 0, dpAsPixels, 0, dpAsPixels);
 
-     //   onUpdate(context, manager, appWidgetIds);
+        //   onUpdate(context, manager, appWidgetIds);
 
         AppWidgetManager.getInstance(context).updateAppWidget(
                 new ComponentName(context, WidgetActivity.class),views);
@@ -785,7 +797,6 @@ public class WidgetActivity extends AppWidgetProvider {
                             for(int y = 0; y < meals[x].dishes.size(); ++y) {
                                 dishlist.add(meals[x].dishes.get(y));
                                 pricelist.add(meals[x].prices.get(y));
-
                             }*/
 
                         }
@@ -807,7 +818,7 @@ public class WidgetActivity extends AppWidgetProvider {
                 } catch (IOException e) {
 
                 }
-        }
+            }
 
             return null;
 
@@ -947,6 +958,11 @@ public class WidgetActivity extends AppWidgetProvider {
                 cafeterialistopen = false;
                 cafeteriaindex = 0;
 
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.putInt("mealindex", 0);
+                editor.commit();
+
             }
 
             String lastchoice = pref.getString("cafeterianame", cafeterialist.get(0));
@@ -986,7 +1002,7 @@ public class WidgetActivity extends AppWidgetProvider {
             }
 
             for(int index = 0; index < indexlist.size(); index++) {
-            //for(int i = 0; i < meals.length; i++) {
+                //for(int i = 0; i < meals.length; i++) {
                 int i = indexlist.get(index);
                 RemoteViews textView = mealholder.get(index);//new RemoteViews(context.getPackageName(), R.layout.widgetheader);
                 if(meals[i].name.equals("공통찬")) continue;
@@ -1061,7 +1077,6 @@ public class WidgetActivity extends AppWidgetProvider {
                             System.out.println("Setting meal name as: " + meals[i].dishes.get(j));
                             RemoteViews menuTextView = menuholder.get(j);
                             this.views.setTextViewText(menuresource.get(menuTextView), simpleDish(meals[i].dishes.get(j)));
-
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
                         }
                         for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
@@ -1133,7 +1148,6 @@ public class WidgetActivity extends AppWidgetProvider {
                             System.out.println(meals[i].dishes.get(j));
                             RemoteViews menuTextView = menuholder.get(j);
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
-
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
                         }
                         for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
@@ -1150,8 +1164,8 @@ public class WidgetActivity extends AppWidgetProvider {
                 //manager.updateAppWidget(thisWidget, textView);
 
 
-   //             AppWidgetManager.getInstance(this.context).updateAppWidget(
-   //                     new ComponentName(this.context.getPackageName(), WidgetActivity.class.getName()), textView);
+                //             AppWidgetManager.getInstance(this.context).updateAppWidget(
+                //                     new ComponentName(this.context.getPackageName(), WidgetActivity.class.getName()), textView);
 
                 //textView.setTextViewText(R.id.headermeal, "TextView number " + String.valueOf(i));
 
