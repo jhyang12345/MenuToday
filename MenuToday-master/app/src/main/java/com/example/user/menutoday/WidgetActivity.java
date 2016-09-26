@@ -736,7 +736,7 @@ public class WidgetActivity extends AppWidgetProvider {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
             System.out.println("Saved time: " + mils + " " + curtime);
             System.out.println("Minutes: " + minutes);
-            if(false) {//(minutes > 360 || manualUpdate) {
+            if(minutes > 360 || manualUpdate) {
                 manualUpdate = false;
                 try {
 

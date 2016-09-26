@@ -144,12 +144,23 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         }
     }
 
+    static class ViewHolderItem {
+        TextView cafeteriaName;
+        LinearLayout listview;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String name = getItem(position).name;
 
+        ViewHolderItem viewholder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
+
+            viewholder = new ViewHolderItem();
+
+            viewholder.cafeteriaName =
             /*convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -167,7 +178,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
 
         cafeteriaName.setText(name);
-        cafeteriaName.setTypeface(typeface);
+        //cafeteriaName.setTypeface(typeface);
 
         convertView.setEnabled(false);
         convertView.setOnClickListener(null);
@@ -191,8 +202,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
             TextView dishprice = (TextView) newitem.findViewById(R.id.price);
 
-            dishname.setTypeface(typeface);
-            dishprice.setTypeface(typeface);
+            //dishname.setTypeface(typeface);
+            //dishprice.setTypeface(typeface);
 
             int pL = newitem.getPaddingLeft();
             int pT = newitem.getPaddingTop();

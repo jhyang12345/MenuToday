@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if(false) {//(minutes > 360) {
+        if(minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
@@ -324,6 +324,8 @@ public class MainActivity extends ActionBarActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         ListView lv = (ListView) findViewById(R.id.meallist);
+
+        lv.setScrollingCacheEnabled(false);
 
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
