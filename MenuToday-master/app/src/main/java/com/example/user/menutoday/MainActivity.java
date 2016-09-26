@@ -325,8 +325,6 @@ public class MainActivity extends ActionBarActivity {
 
         ListView lv = (ListView) findViewById(R.id.meallist);
 
-        lv.setScrollingCacheEnabled(false);
-
         lv.setAdapter(adapter);
         lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

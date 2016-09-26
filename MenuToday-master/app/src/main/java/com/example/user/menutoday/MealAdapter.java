@@ -149,6 +149,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         LinearLayout listview;
     }
 
+    /*
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String name = getItem(position).name;
@@ -160,14 +162,13 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
             viewholder = new ViewHolderItem();
 
-            viewholder.cafeteriaName =
-            /*convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        System.out.println("ListItem clicked!");
-                    }
-                }
-            );*/
+            viewholder.cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
+
+            viewholder.listview = (LinearLayout) convertView.findViewById(R.id.dishList);
+
+            convertView.setTag(viewholder);
+        } else {
+            viewholder = (ViewHolderItem) convertView.getTag();
         }
 
         AssetManager am = getContext().getAssets();
@@ -175,25 +176,9 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         Typeface typeface = Typeface.createFromAsset(am,
                 String.format(Locale.KOREAN, "fonts/malgun.ttf", "malgun.ttf"));
 
-        TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
-
-        cafeteriaName.setText(name);
-        //cafeteriaName.setTypeface(typeface);
-
-        convertView.setEnabled(false);
-        convertView.setOnClickListener(null);
-
-        //ListView listview = (ListView) convertView.findViewById(R.id.dishList);
-        LinearLayout listview = (LinearLayout) convertView.findViewById(R.id.dishList);
-
-        //listview.setId(position);
+        viewholder.cafeteriaName.setText(name);
 
         ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
-
-        int childCount = ((ViewGroup)listview).getChildCount();
-        if(childCount != 0) {
-            return convertView;
-        }
 
         for(int i = 0; i < getItem(position).dishes.size(); ++i) {
 
@@ -211,61 +196,90 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             int pB = newitem.getPaddingBottom();
 
 
-
-
             if(i == getItem(position).dishes.size() - 1) {
-                newitem.setBackground(listview.getResources().getDrawable(R.drawable.noborder));
+                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.noborder));
                 newitem.setPadding(pL, pT, pR, pB);
             } else {
-                newitem.setBackground(listview.getResources().getDrawable(R.drawable.borderbottom));
+                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.borderbottom));
                 newitem.setPadding(pL, pT, pR, pB);
             }
 
+            dishname.setText(getItem(position).dishes.get(i));
+            dishprice.setText(getItem(position).prices.get(i));
+            viewholder.listview.addView(newitem);
 
+        }
+        //cafeteriaName.setTypeface(typeface);
+
+        convertView.setOnClickListener(null);
+
+        return convertView;
+    }
+     */
+
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        String name = getItem(position).name;
+
+        ViewHolderItem viewholder;
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
+
+            viewholder = new ViewHolderItem();
+
+            viewholder.cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
+
+            viewholder.listview = (LinearLayout) convertView.findViewById(R.id.dishList);
+
+            convertView.setTag(viewholder);
+        } else {
+            viewholder = (ViewHolderItem) convertView.getTag();
+        }
+
+        AssetManager am = getContext().getAssets();
+
+        Typeface typeface = Typeface.createFromAsset(am,
+                String.format(Locale.KOREAN, "fonts/malgun.ttf", "malgun.ttf"));
+
+        viewholder.cafeteriaName.setText(name);
+
+        ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
+
+        for(int i = 0; i < getItem(position).dishes.size(); ++i) {
+
+            dishlist.add(new dishprice(getItem(position).dishes.get(i), getItem(position).prices.get(i)));
+            LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
+            TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
+            TextView dishprice = (TextView) newitem.findViewById(R.id.price);
+
+            //dishname.setTypeface(typeface);
+            //dishprice.setTypeface(typeface);
+
+            int pL = newitem.getPaddingLeft();
+            int pT = newitem.getPaddingTop();
+            int pR = newitem.getPaddingRight();
+            int pB = newitem.getPaddingBottom();
+
+
+            if(i == getItem(position).dishes.size() - 1) {
+                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.noborder));
+                newitem.setPadding(pL, pT, pR, pB);
+            } else {
+                newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.borderbottom));
+                newitem.setPadding(pL, pT, pR, pB);
+            }
 
             dishname.setText(getItem(position).dishes.get(i));
             dishprice.setText(getItem(position).prices.get(i));
-            listview.addView(newitem);
+            viewholder.listview.addView(newitem);
 
         }
-/*
-    //    dishpriceAdapter adapter = new dishpriceAdapter(this.getContext(), dishlist);
+        //cafeteriaName.setTypeface(typeface);
 
+        convertView.setOnClickListener(null);
 
-//        listview.setAdapter(adapter);
-
-//        ListAdapter listAdapter = listview.getAdapter();
-
-        int totalItemsHeight = 0;
-        int numberOfItems = adapter.getCount();//listAdapter.getCount();
-
-        // Get total height of all items.
-
-        for (int i = 0; i < numberOfItems; i++) {
-            View item = adapter.getView(i, null, listview);
-
-            listview.addView(item);
-
-            item.measure(View.MeasureSpec.AT_MOST,
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.AT_MOST));
-
-            totalItemsHeight += item.getMeasuredHeight();// + //item.getHeight() + item.getPaddingTop() +
-                    //item.getMeasuredHeightAndState();
-
-
-        }*/
-/*
-        // Get total height of all item dividers.
-        int totalDividersHeight = listview.getDividerHeight() *
-                (numberOfItems - 1);
-
-        // Set list height.
-        ViewGroup.LayoutParams params = listview.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;//totalItemsHeight + totalDividersHeight;
-
-        listview.setLayoutParams(params);
-        listview.requestLayout();
-*/
         return convertView;
     }
 
