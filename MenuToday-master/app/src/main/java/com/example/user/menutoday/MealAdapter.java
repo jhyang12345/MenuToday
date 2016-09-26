@@ -6,14 +6,8 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -174,10 +168,14 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             viewholder = (ViewHolderItem) convertView.getTag();
         }
 
+        TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
+
+        cafeteriaName.setText(name);
+
         AssetManager am = getContext().getAssets();
 
         Typeface typeface = Typeface.createFromAsset(am,
-                String.format(Locale.KOREAN, "fonts/malgun.ttf", "malgun.ttf"));
+                String.format(Locale.KOREAN, "fonts/malgun.ttf", "fonts/malgun.ttf"));
 
         viewholder.cafeteriaName.setText(name);
 
@@ -189,6 +187,7 @@ public class MealAdapter extends ArrayAdapter<Meal> {
             LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
             TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
             TextView dishprice = (TextView) newitem.findViewById(R.id.price);
+
 
             //dishname.setTypeface(typeface);
             //dishprice.setTypeface(typeface);

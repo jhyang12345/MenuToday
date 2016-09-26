@@ -223,8 +223,7 @@ public class WidgetActivity extends AppWidgetProvider {
             PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             PendingIntent prevPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            views.setOnClickPendingIntent(R.id.rightclick, nextPendingIntent);
-            views.setOnClickPendingIntent(R.id.leftclick, prevPendingIntent);
+            views.setOnClickPendingIntent(R.id.menu1, nextPendingIntent);
 
             Intent manualIntent = new Intent(context, getClass());
             manualIntent.setAction(MANUAL_UPDATE);
@@ -947,11 +946,6 @@ public class WidgetActivity extends AppWidgetProvider {
                 updateRestaurant = false;
                 cafeterialistopen = false;
                 cafeteriaindex = 0;
-
-                SharedPreferences.Editor editor = pref.edit();
-
-                editor.putInt("mealindex", 0);
-                editor.commit();
 
             }
 
