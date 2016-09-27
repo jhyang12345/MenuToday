@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:textSize="12dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:fontFamily="sans-serif-medium"
@@ -148,23 +149,47 @@
 
             android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:layout_height="fill_parent"
+        <LinearLayout
             android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:textSize="16dp"
-            android:lineSpacingExtra="2dp"
-            android:textColor="#fff"
-            android:text=""
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:fontFamily="sans-serif-medium"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="10dp"
-            android:id="@+id/menu1"
+            android:id="@+id/mainframe"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
 
-            />
+                android:textSize="16dp"
+                android:lineSpacingExtra="2dp"
+                android:textColor="#fff"
+                android:text=""
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:singleLine="false"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
+                android:fontFamily="sans-serif-medium"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="10dp"
+                android:id="@+id/menu1"
+                />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:textColor="#cfcfcf"
+                android:text=""
+                android:maxLines="1"
+                android:paddingTop="6dp"
+                android:id="@+id/price1"
+                android:gravity="center_horizontal"
+
+                />
+
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="30dp"
@@ -175,65 +200,6 @@
             android:layout_alignParentRight="true"
 
             android:layout_gravity="center_vertical"
-            />
-
-        <TextView
-            android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="14dp"
-            android:textColor="#fff"
-            android:text=""
-            android:textAlignment="center"
-            android:fontFamily="sans-serif-medium"
-            android:padding="4dp"
-            android:paddingTop="8dp"
-            android:id="@+id/menu2"
-
-            />
-        <TextView
-            android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="14dp"
-            android:textColor="#fff"
-            android:text=""
-            android:textAlignment="viewStart"
-            android:fontFamily="sans-serif-medium"
-            android:padding="4dp"
-            android:paddingTop="8dp"
-            android:id="@+id/menu3"
-            android:gravity="center_horizontal"
-            />
-
-        <TextView
-            android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="14dp"
-            android:textColor="#fff"
-            android:text=""
-            android:textAlignment="viewStart"
-            android:fontFamily="sans-serif-medium"
-            android:padding="4dp"
-            android:paddingTop="8dp"
-            android:id="@+id/menu4"
-            android:gravity="center_horizontal"
-            />
-
-        <TextView
-            android:layout_height="fill_parent"
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:textSize="14dp"
-            android:textColor="#fff"
-            android:text=""
-            android:textAlignment="viewStart"
-            android:fontFamily="sans-serif-medium"
-            android:padding="4dp"
-            android:paddingTop="8dp"
-            android:id="@+id/menu5"
-            android:gravity="center_horizontal"
             />
 
     </LinearLayout>

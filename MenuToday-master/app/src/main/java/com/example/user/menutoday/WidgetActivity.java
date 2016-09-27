@@ -233,7 +233,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
             PendingIntent menuPendingIntent = PendingIntent.getBroadcast(context, currentWidgetId, menuIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            views.setOnClickPendingIntent(R.id.menu1, menuPendingIntent);
+            views.setOnClickPendingIntent(R.id.mainframe, menuPendingIntent);
 
             Intent manualIntent = new Intent(context, getClass());
             manualIntent.setAction(MANUAL_UPDATE);
@@ -310,6 +310,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
             updateRestaurant = true;
 
+            cafeterialistopen = true;
 
             System.out.println("Update Restaurant set as: " + updateRestaurant);
 
@@ -488,7 +489,9 @@ public class WidgetActivity extends AppWidgetProvider {
 
             onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(MENU_CLICKED)) {
-            onUpdate(context, manager, appWidgetIds);
+
+
+            //onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(MANUAL_UPDATE)) {
             manualUpdate = true;
 
@@ -787,9 +790,13 @@ public class WidgetActivity extends AppWidgetProvider {
 
                         menus = doc.select(".in-box");
                         meals = GetMenus(menus);
+                        String opentime = doc.select("pre").text();
+
+                        System.out.println("Opentime: " + opentime);
 
                         ArrayList<Meal> CafeteriaMeals = new ArrayList<Meal>();
                         for (int x = 0; x < meals.length; ++x) {
+                            if(!meals[x].name.equals("공통찬"))
                             CafeteriaMeals.add(meals[x]);
 
                             /*ArrayList<String> dishlist = new ArrayList<String>();
@@ -800,7 +807,7 @@ public class WidgetActivity extends AppWidgetProvider {
                             }*/
 
                         }
-                        cafeterialist.add(new CafeteriaItem(cafeterianame, CafeteriaMeals));
+                        cafeterialist.add(new CafeteriaItem(cafeterianame, opentime, CafeteriaMeals));
 
                     }
 
@@ -875,29 +882,14 @@ public class WidgetActivity extends AppWidgetProvider {
 
             ArrayList<RemoteViews> menuholder = new ArrayList<RemoteViews>();
             RemoteViews menuTextView1 = new RemoteViews(context.getPackageName(), R.id.menu1);
-            RemoteViews menuTextView2 = new RemoteViews(context.getPackageName(), R.id.menu2);
-            RemoteViews menuTextView3 = new RemoteViews(context.getPackageName(), R.id.menu3);
-            RemoteViews menuTextView4 = new RemoteViews(context.getPackageName(), R.id.menu4);
-            RemoteViews menuTextView5 = new RemoteViews(context.getPackageName(), R.id.menu5);
+
             menuholder.add(menuTextView1);
-            menuholder.add(menuTextView2);
-            menuholder.add(menuTextView3);
-            menuholder.add(menuTextView4);
-            menuholder.add(menuTextView5);
+
 
             HashMap<RemoteViews, Integer> menuresource = new HashMap<RemoteViews, Integer>();
             menuresource.put(menuTextView1, R.id.menu1);
-            menuresource.put(menuTextView2, R.id.menu2);
-            menuresource.put(menuTextView3, R.id.menu3);
-            menuresource.put(menuTextView4, R.id.menu4);
-            menuresource.put(menuTextView5, R.id.menu5);
 
             this.views.setViewVisibility(menuresource.get(menuTextView1), View.GONE);
-            this.views.setViewVisibility(menuresource.get(menuTextView2), View.GONE);
-            this.views.setViewVisibility(menuresource.get(menuTextView3), View.GONE);
-            this.views.setViewVisibility(menuresource.get(menuTextView5), View.GONE);
-            this.views.setViewVisibility(menuresource.get(menuTextView4), View.GONE);
-
 
             for(int i = 0; i < mealholder.size(); ++i) {
                 this.views.setTextColor(mealresource.get(mealholder.get(i)), context.getResources().getColor(R.color.LightSlateGray));
@@ -1032,6 +1024,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
                         if(nextMenu) {
                             RemoteViews menuTextView = menuholder.get(0);
+                            RemoteViews priceTextView = new RemoteViews(context.getPackageName(), R.id.price1);
 
                             int curindex = pref.getInt("menuindex", 1);
                             System.out.println("Current Menu Index: " + curindex);
@@ -1042,6 +1035,7 @@ public class WidgetActivity extends AppWidgetProvider {
                             saveMenuIndex(context, nextindex);
 
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
@@ -1059,6 +1053,7 @@ public class WidgetActivity extends AppWidgetProvider {
                             saveMenuIndex(context, nextindex);
 
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
@@ -1069,20 +1064,9 @@ public class WidgetActivity extends AppWidgetProvider {
 
                             int curindex = pref.getInt("menuindex", 0);
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(curindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(curindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
                         }
-
-                        /*
-                        for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
-                            System.out.println("Setting meal name as: " + meals[i].dishes.get(j));
-                            RemoteViews menuTextView = menuholder.get(j);
-                            this.views.setTextViewText(menuresource.get(menuTextView), simpleDish(meals[i].dishes.get(j)));
-                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
-                        }
-                        for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
-                            RemoteViews menuTextView = menuholder.get(j);
-                            this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
-                        }*/
 
 
                     }
@@ -1114,6 +1098,7 @@ public class WidgetActivity extends AppWidgetProvider {
                             saveMenuIndex(context, nextindex);
 
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
@@ -1131,6 +1116,7 @@ public class WidgetActivity extends AppWidgetProvider {
                             saveMenuIndex(context, nextindex);
 
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(nextindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
@@ -1141,19 +1127,9 @@ public class WidgetActivity extends AppWidgetProvider {
 
                             int curindex = pref.getInt("menuindex", 0);
                             this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(curindex));
+                            this.views.setTextViewText(R.id.price1, meals[i].prices.get(curindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
                         }
-                        /*
-                        for(int j = 0; j < meals[i].dishes.size() && j < 5; ++j) {
-                            System.out.println(meals[i].dishes.get(j));
-                            RemoteViews menuTextView = menuholder.get(j);
-                            this.views.setTextViewText(menuresource.get(menuTextView), meals[i].dishes.get(j));
-                            this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
-                        }
-                        for(int j = meals[i].dishes.size(); j < 5 && j < menuholder.size(); ++j) {
-                            RemoteViews menuTextView = menuholder.get(j);
-                            this.views.setViewVisibility(menuresource.get(menuTextView), View.GONE);
-                        }*/
 
                     }
                 }

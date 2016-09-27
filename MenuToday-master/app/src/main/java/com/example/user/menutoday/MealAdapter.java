@@ -101,6 +101,8 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            System.out.println("getView called!");
+
             String dishname = getItem(position).dishname;
             String price = getItem(position).price;
 
@@ -156,63 +158,63 @@ public class MealAdapter extends ArrayAdapter<Meal> {
         ViewHolderItem viewholder;
 
         if (convertView == null) {
+
+            AssetManager am = getContext().getAssets();
+
+            Typeface typeface = Typeface.createFromAsset(am,
+                    String.format(Locale.KOREAN, "fonts/malgun.ttf", "fonts/malgun.ttf"));
+
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.meal, parent, false);
+
+            viewholder = new ViewHolderItem();
+            viewholder.cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
+            viewholder.listview = (LinearLayout) convertView.findViewById(R.id.dishList);
+
+//            ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
+
+            for(int i = 0; i < getItem(position).dishes.size(); ++i) {
+
+//                dishlist.add(new dishprice(getItem(position).dishes.get(i), getItem(position).prices.get(i)));
+                LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
+                TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
+                TextView dishprice = (TextView) newitem.findViewById(R.id.price);
+
+
+                //dishname.setTypeface(typeface);
+                //dishprice.setTypeface(typeface);
+
+                int pL = newitem.getPaddingLeft();
+                int pT = newitem.getPaddingTop();
+                int pR = newitem.getPaddingRight();
+                int pB = newitem.getPaddingBottom();
+
+
+                if(i == getItem(position).dishes.size() - 1) {
+                    newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.noborder));
+                    newitem.setPadding(pL, pT, pR, pB);
+                } else {
+                    newitem.setBackground(viewholder.listview.getResources().getDrawable(R.drawable.borderbottom));
+                    newitem.setPadding(pL, pT, pR, pB);
+                }
+
+                dishname.setText(getItem(position).dishes.get(i));
+                dishprice.setText(getItem(position).prices.get(i));
+                viewholder.listview.addView(newitem);
+
+            }
+
+            viewholder.cafeteriaName.setText(name);
+
+            convertView.setTag(viewholder);
 
 
             //convertView.setTag(viewholder);
+        } else {
+            System.out.println("Using buffered holder");
+            viewholder = (ViewHolderItem) convertView.getTag();
         }
 
-        TextView cafeteriaName = (TextView) convertView.findViewById(R.id.mealName);
 
-        cafeteriaName.setText(name);
-
-        LinearLayout listview = (LinearLayout) convertView.findViewById(R.id.dishList);
-
-        AssetManager am = getContext().getAssets();
-
-        Typeface typeface = Typeface.createFromAsset(am,
-                String.format(Locale.KOREAN, "fonts/malgun.ttf", "fonts/malgun.ttf"));
-
-        cafeteriaName.setText(name);
-
-        ArrayList<dishprice> dishlist = new ArrayList<dishprice>();
-
-        int childCount = (listview).getChildCount();
-
-        if(childCount != 0) {
-            return convertView;
-        }
-
-        for(int i = 0; i < getItem(position).dishes.size(); ++i) {
-
-            dishlist.add(new dishprice(getItem(position).dishes.get(i), getItem(position).prices.get(i)));
-            LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.dish, parent, false);
-            TextView dishname = (TextView) newitem.findViewById(R.id.dishName);
-            TextView dishprice = (TextView) newitem.findViewById(R.id.price);
-
-
-            //dishname.setTypeface(typeface);
-            //dishprice.setTypeface(typeface);
-
-            int pL = newitem.getPaddingLeft();
-            int pT = newitem.getPaddingTop();
-            int pR = newitem.getPaddingRight();
-            int pB = newitem.getPaddingBottom();
-
-
-            if(i == getItem(position).dishes.size() - 1) {
-                newitem.setBackground(listview.getResources().getDrawable(R.drawable.noborder));
-                newitem.setPadding(pL, pT, pR, pB);
-            } else {
-                newitem.setBackground(listview.getResources().getDrawable(R.drawable.borderbottom));
-                newitem.setPadding(pL, pT, pR, pB);
-            }
-
-            dishname.setText(getItem(position).dishes.get(i));
-            dishprice.setText(getItem(position).prices.get(i));
-            listview.addView(newitem);
-
-        }
         //cafeteriaName.setTypeface(typeface);
 
         convertView.setOnClickListener(null);

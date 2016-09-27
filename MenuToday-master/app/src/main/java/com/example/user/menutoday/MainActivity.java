@@ -60,9 +60,11 @@ class CafeteriaItem {
 
     String cafeterianame;
     ArrayList<Meal> meals;
+    String opentime;
 
-    public CafeteriaItem(String cafeterianame, ArrayList<Meal> meals) {
+    public CafeteriaItem(String cafeterianame, String opentime, ArrayList<Meal> meals) {
         this.cafeterianame = cafeterianame;
+        this.opentime = opentime;
         this.meals = meals;
     }
 
@@ -194,7 +196,7 @@ public class MainActivity extends ActionBarActivity {
         updateCafeteria(currentname);
         for(CafeteriaItem item: cafeterialist) {
             if(item.cafeterianame.equals(currentname)) {
-                loadMeals(item.meals);
+                loadMeals(item.meals, item.opentime);
 
                 break;
             }
@@ -308,7 +310,7 @@ public class MainActivity extends ActionBarActivity {
         return price;
     }
 
-    private void loadMeals(ArrayList<Meal> mealmenus) {
+    private void loadMeals(ArrayList<Meal> mealmenus, String opentime) {
         ArrayList<Meal> meallist = mealmenus;
         /*
         for (int i = 0; i < meals.length; ++i) {
@@ -334,6 +336,12 @@ public class MainActivity extends ActionBarActivity {
                 System.out.println(view.getMeasuredHeight());
             }
         });
+
+        LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.opentime, null, false);
+        TextView opentimeView = (TextView) newitem.findViewById(R.id.opentime);
+        opentimeView.setText(opentime);
+        lv.addHeaderView(newitem);
+
     }
 
     private void GetMenus(Elements elements) {
@@ -513,9 +521,13 @@ public class MainActivity extends ActionBarActivity {
 
                     menus = doc.select(".in-box");
                     GetMenus(menus);
+                    String opentime = doc.select("pre").text();
+
+                    System.out.println("Opentime: " + opentime);
 
                     ArrayList<Meal> CafeteriaMeals = new ArrayList<Meal>();
                     for(int x = 0; x < meals.length; ++x) {
+                        if(!meals[x].name.equals("공통찬"))
                         CafeteriaMeals.add(meals[x]);
 
                         /*ArrayList<String> dishlist = new ArrayList<String>();
@@ -526,7 +538,7 @@ public class MainActivity extends ActionBarActivity {
                         }*/
 
                     }
-                    cafeterialist.add(new CafeteriaItem(cafeterianame, CafeteriaMeals));
+                    cafeterialist.add(new CafeteriaItem(cafeterianame, opentime, CafeteriaMeals));
 
                 }
 
