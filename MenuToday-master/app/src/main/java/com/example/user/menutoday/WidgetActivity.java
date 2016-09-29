@@ -101,6 +101,8 @@ public class WidgetActivity extends AppWidgetProvider {
     static boolean nextMenu = false;
     static boolean prevMenu = false;
 
+    static boolean plainMenuClick = false;
+
     static boolean changingMenu = false;
 
     static boolean manualUpdate = false;
@@ -491,8 +493,8 @@ public class WidgetActivity extends AppWidgetProvider {
             onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(MENU_CLICKED)) {
 
+            changingMenu = true;
 
-            //onUpdate(context, manager, appWidgetIds);
         } else if(intent.getAction().equals(MANUAL_UPDATE)) {
             manualUpdate = true;
 
@@ -992,6 +994,8 @@ public class WidgetActivity extends AppWidgetProvider {
 
                 editor.putInt("menuindex", 0);
                 editor.commit();
+
+                plainMenuClick = false;
             }
 
             updateRestaurant = false;
