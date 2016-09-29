@@ -128,12 +128,13 @@ public class WidgetActivity extends AppWidgetProvider {
             pref =  context.getSharedPreferences("meals", Context.MODE_PRIVATE);
 
             Calendar c = Calendar.getInstance();
+            //c.set(2016, 9, 3);
             int minutes = c.get(Calendar.MINUTE);
             int hours = c.get(Calendar.HOUR_OF_DAY);
             int month = c.get(Calendar.MONTH) + 1;
             int day = c.get(Calendar.DAY_OF_MONTH);
             int weekday = c.get(Calendar.DAY_OF_WEEK);
-
+//            System.out.println("Weekday: " + weekday + weekdays[weekday]);
             views.setTextViewText(R.id.currentTime, Integer.parseInt(String.valueOf(month)) + "월 " + Integer.parseInt(String.valueOf(day)) +
                     "일 " + weekdays[weekday] + "요일");
 
@@ -797,7 +798,7 @@ public class WidgetActivity extends AppWidgetProvider {
                         ArrayList<Meal> CafeteriaMeals = new ArrayList<Meal>();
                         for (int x = 0; x < meals.length; ++x) {
                             if(!meals[x].name.equals("공통찬"))
-                            CafeteriaMeals.add(meals[x]);
+                                CafeteriaMeals.add(meals[x]);
 
                             /*ArrayList<String> dishlist = new ArrayList<String>();
                             ArrayList<String> pricelist = new ArrayList<String>();
@@ -857,7 +858,7 @@ public class WidgetActivity extends AppWidgetProvider {
 
                 manager.updateAppWidget(thisWidget, views);
 
-                updateRestaurant = false;
+
             }
 
 
@@ -986,12 +987,14 @@ public class WidgetActivity extends AppWidgetProvider {
 
             //Update widget issue starting here
 
-            if(!nextMenu && !prevMenu) {
+            if(!nextMenu && !prevMenu && !updateRestaurant) {
                 SharedPreferences.Editor editor = pref.edit();
 
                 editor.putInt("menuindex", 0);
                 editor.commit();
             }
+
+            updateRestaurant = false;
 
             for(int index = 0; index < indexlist.size(); index++) {
                 //for(int i = 0; i < meals.length; i++) {
