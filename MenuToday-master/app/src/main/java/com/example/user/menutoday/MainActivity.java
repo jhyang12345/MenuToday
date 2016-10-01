@@ -9,9 +9,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -130,12 +132,18 @@ public class MainActivity extends AppCompatActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if (minutes > 360) {
+        if (false) { //(minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
             loadFromJson();
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
