@@ -8,28 +8,7 @@
     android:fitsSystemWindows="true"
     >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
 
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white"
-        android:background="#053484"
-
-        android:gravity="top|left"
-
-    >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="0dp"
-            android:src="@drawable/icon"/>
-
-
-    </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,30 +17,52 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        android:background="@color/blue"
+        android:background="#fbfbfb"
         android:paddingBottom="0dp"
 
         >
 
-
-        <ListView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/mainappheader"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:fontFamily="sans-serif-medium"
-            android:id="@+id/meallist">
+            android:layout_height="wrap_content"
+            android:id="@+id/actionBar"
+            android:background="#053484"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:elevation="20dp"
+            android:translationZ="20dp"
+            android:gravity="center_vertical"
+            >
 
-        </ListView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textColor="#FFF"
+                android:id="@+id/actionBarTitle"
+
+                android:text="@string/app_name"/>
+
+            <ImageView
+                android:id="@+id/openoptions"
+                android:src="@drawable/down"
+                android:layout_height="25dp"
+                android:layout_width="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/mainappheader"
-            android:background= "@drawable/buttonshape"
+            android:background= "@drawable/restaurantbackground"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/actionBar"
             android:padding="6dp"
             android:gravity="center">
 
@@ -75,21 +76,27 @@
                 android:layout_centerHorizontal="true"
 
                 android:background="#00000000"
-                android:textColor="#FFF"
+                android:textColor="#777"
                 android:fontFamily="sans-serif-medium"
                 android:alpha="0" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="8dp"
-
-
-                android:src="@drawable/up"
-
-                />
 
         </LinearLayout>
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/mainappheader"
+
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fontFamily="sans-serif-medium"
+            android:id="@+id/meallist">
+
+        </ListView>
+
+
 
     </RelativeLayout>
 

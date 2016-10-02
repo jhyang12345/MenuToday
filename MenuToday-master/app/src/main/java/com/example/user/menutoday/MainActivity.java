@@ -3,17 +3,19 @@ package com.example.user.menutoday;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
+import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,10 +71,12 @@ class CafeteriaItem {
 
 }
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
 
     TextView myTextView;
     Button cafeteriaSelector;
+    ImageView openOptions;
+
     String[] names;
     String[] links;
 
@@ -113,12 +118,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         cafeteriaSelector = (Button) findViewById(R.id.selector);
-        cafeteriaSelector.setOnClickListener(new View.OnClickListener() {
+
+        openOptions = (ImageView) findViewById(R.id.openoptions);
+        openOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OpenDialog();
             }
         });
+//        cafeteriaSelector.setVisibility(View.GONE);
 
         hasAdded = new HashMap<String, Boolean>();
 
@@ -139,8 +147,15 @@ public class MainActivity extends AppCompatActivity {
             loadFromJson();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.MATCH_PARENT,
+                Gravity.LEFT | Gravity.CENTER_VERTICAL
+        );
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
 
 
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
