@@ -755,7 +755,7 @@ public class WidgetActivity extends AppWidgetProvider {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
             System.out.println("Saved time: " + mils + " " + curtime);
             System.out.println("Minutes: " + minutes);
-            if(false) {//(minutes > 360 || manualUpdate) {
+            if(minutes > 360 || manualUpdate) {
                 manualUpdate = false;
                 try {
 
@@ -950,6 +950,9 @@ public class WidgetActivity extends AppWidgetProvider {
 
                 this.views.setViewVisibility(R.id.widgetcafeteria, View.VISIBLE);
 
+                this.views.setViewVisibility(R.id.pagercount, View.VISIBLE);
+                this.views.setViewVisibility(R.id.price1, View.VISIBLE);
+
                 settingRestaurant = false;
                 updateRestaurant = false;
                 cafeterialistopen = false;
@@ -1110,6 +1113,8 @@ public class WidgetActivity extends AppWidgetProvider {
                             this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
+                            this.views.setViewVisibility(R.id.pagercount, View.VISIBLE);
+                            this.views.setViewVisibility(R.id.price1, View.VISIBLE);
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
 
                             nextMenu = false;
@@ -1128,6 +1133,8 @@ public class WidgetActivity extends AppWidgetProvider {
                             this.views.setTextViewText(R.id.price1, meals[i].prices.get(nextindex));
                             this.views.setViewVisibility(menuresource.get(menuTextView), View.VISIBLE);
 
+                            this.views.setViewVisibility(R.id.pagercount, View.VISIBLE);
+                            this.views.setViewVisibility(R.id.price1, View.VISIBLE);
                             this.views.setTextViewText(R.id.pagercount, (pref.getInt("menuindex", 0) + 1) + " / " + meals[i].dishes.size());
 
                             prevMenu = false;
@@ -1171,11 +1178,21 @@ public class WidgetActivity extends AppWidgetProvider {
                 }
             }
 
-
             if(meals.length == 0) {
-                this.views.setViewVisibility(R.id.header, View.INVISIBLE);
+                this.views.setViewVisibility(R.id.header, View.VISIBLE);
                 System.out.println("Information is currently not ready!");
                 System.out.println("Setting header as invisible");
+
+                RemoteViews textView = mealholder.get(0);
+                this.views.setTextViewText(mealresource.get(textView), "오늘은 식사가 없습니다.");
+                this.views.setTextColor(mealresource.get(textView), context.getResources().getColor(R.color.White));
+                this.views.setViewVisibility(mealresource.get(textView), View.VISIBLE);
+
+                this.views.setViewVisibility(R.id.price1, View.INVISIBLE);
+
+                this.views.setViewVisibility(R.id.pagercount, View.INVISIBLE);
+
+
             } else {
                 this.views.setViewVisibility(R.id.header, View.VISIBLE);
                 System.out.println("Setting header as visible");

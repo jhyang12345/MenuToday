@@ -36,6 +36,8 @@
             android:gravity="center_vertical"
             >
 
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,43 +58,19 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainappheader"
-            android:background= "@drawable/restaurantbackground"
-            android:orientation="horizontal"
-            android:layout_below="@+id/actionBar"
-            android:padding="6dp"
-            android:gravity="center">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="24dp"
-                android:text="New Button"
-                android:id="@+id/selector"
-                android:layout_marginTop="0dp"
-                android:layout_centerHorizontal="true"
-
-                android:background="#00000000"
-                android:textColor="#777"
-                android:fontFamily="sans-serif-medium"
-                android:alpha="0" />
-
-
-        </LinearLayout>
-
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/mainappheader"
+
+            android:layout_below="@id/actionBar"
 
             android:divider="@null"
             android:dividerHeight="0dp"
             android:fontFamily="sans-serif-medium"
             android:id="@+id/meallist">
+
+
 
         </ListView>
 

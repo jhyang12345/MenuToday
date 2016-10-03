@@ -109,16 +109,6 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout holder = (LinearLayout) findViewById(R.id.mainappheader);
-        holder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenDialog();
-            }
-        });
-
-        cafeteriaSelector = (Button) findViewById(R.id.selector);
-
         openOptions = (ImageView) findViewById(R.id.openoptions);
         openOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +130,7 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(curtime - mils);
         System.out.println("Saved time: " + mils + " " + curtime);
         System.out.println("Minutes: " + minutes);
-        if (false) { //(minutes > 360) {
+        if (minutes > 360) {
             new RetrieveURL().execute();
         } else {
             System.out.println("LOADING FROM JSON FILE!!!");
@@ -212,7 +202,7 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         String currentname = pref.getString("cafeterianame", "학생식당");
-        updateCafeteria(currentname);
+        //updateCafeteria(currentname);
         for(CafeteriaItem item: cafeterialist) {
             if(item.cafeterianame.equals(currentname)) {
                 loadMeals(item.meals, item.opentime);
@@ -356,10 +346,24 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
             }
         });
 
-        LinearLayout newitem =  (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.opentime, null, false);
-        TextView opentimeView = (TextView) newitem.findViewById(R.id.opentime);
+
+        LinearLayout cafeteriaLayout = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.restaurantheader, null, false);
+
+        pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+        cafeteriaSelector = (Button) cafeteriaLayout.findViewById(R.id.selector);
+        cafeteriaSelector.setText(pref.getString("cafeterianame", "학생식당"));
+
+
+        TextView opentimeView = (TextView) cafeteriaLayout.findViewById(R.id.opentime);
         opentimeView.setText(opentime);
-        lv.addHeaderView(newitem);
+
+        lv.addHeaderView(cafeteriaLayout);
+
+        if(mealmenus.size() == 0) {
+            LinearLayout closedLayout = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.closed, null);
+            TextView closedMessage = (TextView) closedLayout.findViewById(R.id.closed);
+            lv.addFooterView(closedLayout);
+        }
 
     }
 
