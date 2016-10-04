@@ -199,11 +199,14 @@ public class MealAdapter extends ArrayAdapter<Meal> {
 
                 dishname.setText(getItem(position).dishes.get(i));
                 dishprice.setText(getItem(position).prices.get(i));
+                dishname.setTypeface(typeface);
+                dishprice.setTypeface(typeface);
                 viewholder.listview.addView(newitem);
 
             }
 
             viewholder.cafeteriaName.setText(name);
+            viewholder.cafeteriaName.setTypeface(typeface);
 
             convertView.setTag(viewholder);
 

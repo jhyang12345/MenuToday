@@ -3,6 +3,8 @@ package com.example.user.menutoday;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
@@ -52,6 +54,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -77,12 +80,17 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
     Button cafeteriaSelector;
     ImageView openOptions;
 
+    TextView appName;
+
     String[] names;
     String[] links;
 
     Meal[] meals;
     String[] dishes;
     int[] prices;
+
+    Typeface typeface;
+    Typeface boldtypeface;
 
     static boolean Rendered = false;
     static HashMap<String, Boolean> hasAdded;
@@ -122,7 +130,18 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
 
         originallink  = getCafeteria(this.getApplicationContext());
 
+        AssetManager am = getAssets();
+
+        typeface = Typeface.createFromAsset(am,
+                String.format(Locale.KOREAN, "fonts/malgun.ttf", "fonts/malgun.ttf"));
+
+        boldtypeface = Typeface.createFromAsset(am,
+                String.format(Locale.KOREAN, "fonts/malgunbd.ttf", "fonts/malgunbd.tff"));
+
         pref = this.getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+
+        appName = (TextView) findViewById(R.id.actionBarTitle);
+        appName.setTypeface(boldtypeface);
 
         long mils = pref.getLong("TIME", 0);
         Date today = new Date();
@@ -146,7 +165,15 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        pref = this.getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
 
+        if(!pref.getBoolean("suggested", false)) {
+            SuggestWidget();
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("suggested", true);
+            editor.commit();
+        }
 
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -185,6 +212,9 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
     }
 
     private void loadFromJson() {
+
+        pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+
         String wholewebsite = pref.getString("allitems", "{}");
         System.out.println(wholewebsite);
         Gson gson = new Gson();
@@ -199,7 +229,7 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
             }
             names[i] = cafeterialist[i].cafeterianame;
         }
-        pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
+
         SharedPreferences.Editor editor = pref.edit();
         String currentname = pref.getString("cafeterianame", "학생식당");
         //updateCafeteria(currentname);
@@ -211,6 +241,17 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
             }
         }
 
+    }
+
+    private void SuggestWidget() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.suggestwidget, null);
+        dialog.setContentView(convertView);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     private void OpenDialog() {
@@ -352,16 +393,19 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("meals", MODE_PRIVATE);
         cafeteriaSelector = (Button) cafeteriaLayout.findViewById(R.id.selector);
         cafeteriaSelector.setText(pref.getString("cafeterianame", "학생식당"));
+        cafeteriaSelector.setTypeface(boldtypeface);
 
 
         TextView opentimeView = (TextView) cafeteriaLayout.findViewById(R.id.opentime);
         opentimeView.setText(opentime);
+        opentimeView.setTypeface(typeface);
 
         lv.addHeaderView(cafeteriaLayout);
 
         if(mealmenus.size() == 0) {
             LinearLayout closedLayout = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.closed, null);
             TextView closedMessage = (TextView) closedLayout.findViewById(R.id.closed);
+            closedMessage.setTypeface(typeface);
             lv.addFooterView(closedLayout);
         }
 
@@ -500,7 +544,6 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
 
         private Exception exception;
 
-        String retvalue;
         Elements cafeterias;
         Elements menus;
 
@@ -517,10 +560,14 @@ public class MainActivity extends ActionBarActivity {//{//AppCompatActivity {
 
                 menus = doc.select(".in-box");
                 //   GetMenus(menus);
-                retvalue = cafeterias.html();
-
 
             } catch (IOException e) {
+                doc = Jsoup.parse("");
+
+                cafeterias = doc.select(".tab-7 > li");
+
+                menus = doc.select(".in-box");
+
                 e.printStackTrace();
             }
 

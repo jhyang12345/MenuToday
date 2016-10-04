@@ -27,16 +27,22 @@
             android:layout_height="wrap_content"
             android:id="@+id/actionBar"
             android:background="#053484"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="20dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingLeft="15dp"
             android:paddingRight="20dp"
             android:elevation="20dp"
             android:translationZ="20dp"
             android:gravity="center_vertical"
             >
 
-
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/iconhy"
+                android:id="@+id/appicon"
+                android:layout_alignParentLeft="true"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,7 +50,7 @@
                 android:textSize="30dp"
                 android:textColor="#FFF"
                 android:id="@+id/actionBarTitle"
-
+                android:layout_marginLeft="45dp"
                 android:text="@string/app_name"/>
 
             <ImageView

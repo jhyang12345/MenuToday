@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="12dp"
+        android:textSize="4pt"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:fontFamily="sans-serif-medium"
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="학생식당"
-        android:textSize="12dp"
+        android:textSize="3pt"
         android:textColor="#FFF"
         android:background="@drawable/widgetbutton"
         android:id="@+id/widgetcafeteria"
@@ -59,13 +59,13 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="14dp"
+            android:textSize="5pt"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
             android:fontFamily="sans-serif-medium"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="2pt"
+            android:paddingBottom="2pt"
             android:id="@+id/headermeal1"
             android:gravity="center_horizontal"
             android:background="@drawable/nounderline"
@@ -73,13 +73,13 @@
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_height="wrap_content"
             android:layout_width="0dip"
-            android:textSize="14dp"
+            android:textSize="5pt"
             android:textColor="#778899"
             android:layout_weight="1"
             android:text=""
             android:fontFamily="sans-serif-medium"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="2pt"
+            android:paddingBottom="2pt"
             android:id="@+id/headermeal2"
             android:gravity="center_horizontal"
             android:background="@drawable/nounderline"
@@ -140,7 +140,7 @@
         android:layout_alignParentStart="true">
 
         <ImageView
-            android:layout_width="30dp"
+            android:layout_width="10pt"
             android:layout_height="fill_parent"
             android:padding="4dp"
             android:id="@+id/leftclick"
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
 
-                android:textSize="16dp"
+                android:textSize="5pt"
                 android:lineSpacingExtra="2dp"
                 android:textColor="#fff"
                 android:text=""
@@ -178,7 +178,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="4pt"
                 android:textColor="#cfcfcf"
                 android:text=""
                 android:maxLines="1"
@@ -192,7 +192,7 @@
 
 
         <ImageView
-            android:layout_width="30dp"
+            android:layout_width="10pt"
             android:layout_height="fill_parent"
             android:padding="4dp"
             android:id="@+id/rightclick"
@@ -223,7 +223,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -244,7 +244,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -265,7 +265,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -286,7 +286,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -307,7 +307,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -328,7 +328,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -349,7 +349,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
             android:background="@drawable/cafeteriaunderline"
@@ -370,7 +370,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12dp"
+            android:textSize="4pt"
             android:textColor="#FFF"
 
 
@@ -399,6 +399,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3 / 3"
+            android:textSize="5pt"
             android:fontFamily="sans-serif-medium"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
